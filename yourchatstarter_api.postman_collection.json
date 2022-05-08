@@ -1,0 +1,522 @@
+{
+	"info": {
+		"_postman_id": "6a11b736-3e4e-431e-ae4d-5ae70335bec8",
+		"name": "yourchatstarter_api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "9919b974a26312e35ae50ab35127b9d0",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"bacuong313\",\r\n    \"password\": \"31032000\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/auth/login",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "send_message (local instance)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "e24d8a7a91a4ac1b200a016639f5704c",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"post\": \"Tin tức\",\r\n    \"context\": {},\r\n    \"is_local\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/send_message",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"send_message"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "send_message (wit instance)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "e24d8a7a91a4ac1b200a016639f5704c",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"post\": \"Đức\",\r\n    \"context\": {}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/send_message",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"send_message"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "register",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"bacuong313\",\r\n    \"password\": \"31032000\",\r\n    \"confirm_password\": \"31032000\",\r\n    \"email\": \"18520013@gm.uit.edu.vn\" \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/auth/register",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "newest_blog",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/blog/newest_blog",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"blog",
+						"newest_blog"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all_blog",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/blog/all_blog",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"blog",
+						"all_blog"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "blog",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"articleId\" : \"1\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/blog/blog",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"blog",
+						"blog"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "profile",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "e24d8a7a91a4ac1b200a016639f5704c",
+						"description": "Dùng API Login rồi lấy token từ response bỏ vào đây",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/user/profile",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"user",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "send_voice (wit instance)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/send_voice",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"send_voice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "save_profile",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "e24d8a7a91a4ac1b200a016639f5704c",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"bacuong2000\",\r\n    \"email\": \"18520014@gm.uit.edu.vn\",\r\n    \"birthday\": \"31-03-2000T13:00:00Z\",\r\n    \"display_name\": \"Cường\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/user/save_profile",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"user",
+						"save_profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_preference",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "e24d8a7a91a4ac1b200a016639f5704c",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/user/get_preference",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"user",
+						"get_preference"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "billing",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "e24d8a7a91a4ac1b200a016639f5704c",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/user/billing",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"user",
+						"billing"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "submit_info",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "9ba6d342be140e10d7e8323a5334ac9f",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"plan_name\": \"premium\",\r\n    \"amount\": 20000,\r\n    \"name\": \"Nguyễn Ngọc Đăng\",\r\n    \"email\": \"neroyuki241@gmail.com\",\r\n    \"phone_number\": \"0333079485\",\r\n    \"address\": \"Quảng Bình\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/payment/submit_info",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"payment",
+						"submit_info"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "change_password",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "e24d8a7a91a4ac1b200a016639f5704c",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"old_password\": \"31032000\",\r\n    \"new_password\": \"31032001\",\r\n    \"confirm_new_password\": \"31032001\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/auth/change_password",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"auth",
+						"change_password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "e24d8a7a91a4ac1b200a016639f5704c",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/auth/logout",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "subcribe - INCOMPLETE",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/notification/subscribe",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"notification",
+						"subscribe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "save_preference",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-access-token",
+						"value": "",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{           \r\n    \"allow_auto_t2s\": true,\r\n    \"allow_push_notification\": true,\r\n    \"allow_voice_recording\": true,\r\n    \"voice_selection\": \"<Retrivable voice name>\",\r\n    \"voice_rate\": 0.8\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://yourchatstarter.xyz/api/user/save_preference",
+					"protocol": "https",
+					"host": [
+						"yourchatstarter",
+						"xyz"
+					],
+					"path": [
+						"api",
+						"user",
+						"save_preference"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
