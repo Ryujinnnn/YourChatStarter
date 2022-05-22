@@ -29,7 +29,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   //UserRespondModel user;
   late ProfileRespondModel profile;
   bool circular = true;
-  late DateTime _selectedDate;
+  DateTime _selectedDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+
   late File file;
   ImagePicker imagePicker = ImagePicker();
   bool isAPIcallProcess = false;
@@ -48,9 +50,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    fetchData();
     fToast = FToast();
     fToast.init(context);
-    fetchData();
   }
 
   @override
@@ -101,15 +103,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Icons.arrow_circle_up_outlined,
                     size: 25,
                   )),
-              IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute<bool>(builder: (BuildContext context) {
-                    return SettingScreen();
-                  }));
-                },
-              )
             ],
           ),
           body: circular
@@ -144,7 +137,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               Text(
                 "Hồ sơ người dùng: ",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
               ),
               buildEnableFocusTextField(
                   "Tên hiển thị", "Nhập tên hiển thị", displayNameController),
@@ -230,16 +226,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return TextField(
       focusNode: new AlwaysDisabledFocusNode(),
       controller: controller,
+      style: const TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+      ),
       decoration: InputDecoration(
-          labelStyle: TextStyle(
-            fontSize: 16,
-            color: Colors.grey,
-          ),
-          labelText: label,
-          hintStyle: TextStyle(
-            fontSize: 16,
-            color: Colors.grey.withOpacity(0.3),
-          )),
+        labelStyle: const TextStyle(
+          fontSize: 16,
+          color: Colors.grey,
+        ),
+        labelText: label,
+        hintStyle: TextStyle(
+          fontSize: 16,
+          color: Colors.grey.withOpacity(0.3),
+        ),
+      ),
     );
   }
 
@@ -247,9 +248,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       String label, String hint, TextEditingController controller) {
     return TextField(
       controller: controller,
+      style: const TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+      ),
       decoration: InputDecoration(
           labelText: label,
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
             fontSize: 16,
             color: Colors.grey,
           ),
@@ -265,6 +270,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       String label, TextEditingController controller) {
     return TextField(
       controller: controller,
+      style: const TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+      ),
       obscureText: true,
       decoration: InputDecoration(
           labelText: label,
@@ -307,16 +316,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       var response = await APIService.getProfile();
       setState(() {
         profile = response;
-        if (response.user != null) {
+        if (profile.user != null) {
           userNameController.text = response.user.username;
           displayNameController.text = response.user.displayName;
           emailController.text = response.user.email;
           paidValidUntilController.text = response.user.paidValidUntil;
           statusController.text = response.user.status;
           displayNameController.text = response.user.displayName;
-          // birthDayController.text = response.user.birthday != null
-          //     ? DateFormat.yMMMd().format(DateTime.parse(response.user.birthday))
-          //     : "";
+          birthDayController.text = response.user.birthday != ""
+              ? DateFormat.yMMMd()
+                  .format(DateTime.parse(response.user.birthday))
+              : "";
         }
         circular = false;
       });
@@ -341,33 +351,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
       onTap: () {
-        _selectDate(context);
+        //_selectDate(context);
       },
     );
   }
 
   _selectDate(BuildContext context) async {
     DateTime? newSelectedDate = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(1960),
-      lastDate: DateTime(2040),
-      // builder: (context, Theme child) async {
-      //   assert(context != null);
-      //   return Theme(
-      //     data: ThemeData.dark().copyWith(
-      //       colorScheme: ColorScheme.dark(
-      //         primary: Colors.deepPurple,
-      //         onPrimary: Colors.white,
-      //         surface: Colors.blueGrey,
-      //         onSurface: Colors.black,
-      //       ),
-      //       dialogBackgroundColor: Colors.blue[50],
-      //     ),
-      //     child: child,
-      //   );
-    );
-
+        context: context,
+        initialDate: _selectedDate,
+        firstDate: DateTime(1960),
+        lastDate: DateTime(2040));
     if (newSelectedDate != null) {
       _selectedDate = newSelectedDate;
       birthDayController

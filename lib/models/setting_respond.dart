@@ -9,13 +9,13 @@ class SettingRespondModel {
   late String status;
   late String desc;
   Preference preference = Preference(
-      sId: "sId",
-      userId: "userId",
-      allowAutoT2s: true,
-      allowPushNotification: true,
-      allowVoiceRecording: true,
-      voiceRate: 1.0,
-      voiceSelection: "");
+    sId: "",
+    userId: "",
+    allowAutoT2s: true,
+    allowPushNotification: true,
+    allowVoiceRecording: true,
+    voiceRate: 1.0,
+  );
 
   SettingRespondModel({required this.status, required this.desc});
 
@@ -43,7 +43,6 @@ class Preference {
   late bool allowPushNotification;
   late bool allowVoiceRecording;
   late double voiceRate;
-  late String voiceSelection;
 
   Preference(
       {required this.sId,
@@ -51,8 +50,7 @@ class Preference {
       required this.allowAutoT2s,
       required this.allowPushNotification,
       required this.allowVoiceRecording,
-      required this.voiceRate,
-      required this.voiceSelection});
+      required this.voiceRate});
 
   Preference.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
@@ -61,8 +59,6 @@ class Preference {
     allowPushNotification = json['allow_push_notification'];
     allowVoiceRecording = json['allow_voice_recording'];
     voiceRate = json['voice_rate'] != null ? json['voice_rate'] + .0 : null;
-    voiceSelection =
-        json['voice_selection'] != null ? json['voice_selection'] : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -73,7 +69,6 @@ class Preference {
     data['allow_push_notification'] = this.allowPushNotification;
     data['allow_voice_recording'] = this.allowVoiceRecording;
     data['voice_rate'] = this.voiceRate;
-    data['voice_selection'] = this.voiceSelection;
     return data;
   }
 }

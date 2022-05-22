@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import 'package:your_chat_starter/components/primary_button.dart';
 import 'package:your_chat_starter/constants.dart';
+import 'package:your_chat_starter/models/subscribe_push_request.dart';
 import 'package:your_chat_starter/screens/chatbot_screen.dart';
 
 import '../../components/password_field.dart';
@@ -25,6 +26,8 @@ class LoginScreenState extends State<LoginScreen> {
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   final TextEditingController username = TextEditingController();
   final TextEditingController password = TextEditingController();
+  final SubscribeData subscribeData =
+      SubscribeData(subscribeId: externalUserId);
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +127,10 @@ class LoginScreenState extends State<LoginScreen> {
                           Navigator.pushAndRemoveUntil(context,
                               MaterialPageRoute(
                             builder: (context) {
+                              SubscribePushRequestModel model =
+                                  SubscribePushRequestModel(
+                                      subscribeData: subscribeData);
+                              APIService.subscribe(model);
                               return const ChatBotScreen();
                             },
                           ), (route) => false)

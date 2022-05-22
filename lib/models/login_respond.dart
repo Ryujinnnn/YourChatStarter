@@ -12,23 +12,40 @@ class LoginRespondModel {
       {required this.status, required this.desc, required this.token});
 
   LoginRespondModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    desc = json['desc'];
-    print(json);
-    if (json['token'] != null)
+    if (json['status'] != null) {
+      status = json['status'];
+    } else {
+      status = "";
+    }
+    if (json['desc'] != null) {
+      desc = json['desc'];
+    } else {
+      desc = "";
+    }
+    if (json['token'] != null) {
       token = json['token'];
-    else
+    } else {
       token = "";
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['status'] = status;
-    data['desc'] = desc;
-    if (token != null)
+    if (status != null) {
+      data['status'] = status;
+    } else {
+      data['status'] = "";
+    }
+    if (desc != null) {
+      data['desc'] = desc;
+    } else {
+      data['desc'] = "";
+    }
+    if (token != null) {
       data['token'] = token;
-    else
+    } else {
       data['token'] = "";
+    }
     return data;
   }
 }

@@ -11,4 +11,6 @@ class Config {
   static const String blogAPI = "/api/blog/all_blog";
   static const String detailBlogAPI = "/api/blog/blog";
   static const String changePasswordAPI = "/api/auth/change_password";
+  static const String subscribePushAPI = "/api/notification/subscribe_push";
+  static const String logOutAPI = "/api/auth/logout";
 }

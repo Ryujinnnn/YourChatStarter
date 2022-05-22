@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:your_chat_starter/main.dart';
+import 'package:your_chat_starter/models/subscribe_push_request.dart';
 import 'package:your_chat_starter/services/shared_service.dart';
 
 import '../config.dart';
@@ -31,13 +32,42 @@ class APIService {
           'Content-Type': 'application/json',
         },
         body: jsonEncode(model.toJson()));
-    print(response.toString());
     if (response.statusCode == 200) {
       await SharedService.setLoginDetails(loginRespondJson(response.body));
+      await SharedService.setUserNameDetails(model);
       return true;
     } else {
       return false;
     }
+  }
+
+  static Future<bool> subscribe(SubscribePushRequestModel model) async {
+    var url = Uri.parse(Config.apiURL + Config.subscribePushAPI);
+    var loginDetails = await SharedService.loginDetails();
+    var response = await client.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'x-access-token': loginDetails.token,
+        },
+        body: jsonEncode(model.toJson()));
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  static Future<bool> logout() async {
+    var loginDetails = await SharedService.loginDetails();
+    var url = Uri.parse(Config.apiURL + Config.logOutAPI);
+    var response = await client.get(url, headers: <String, String>{
+      'x-access-token': loginDetails.token,
+    });
+    // ignore: unnecessary_null_comparison
+    if (response != null) {
+      return true;
+    }
+    return false;
   }
 
   static Future<bool> register(RegisterRequestModel model) async {
@@ -65,6 +95,7 @@ class APIService {
           headers: <String, String>{
             'Content-Type': 'application/json',
             'x-access-token': loginDetails.token,
+            'subscriber-id': externalUserId
           },
           body: jsonEncode(model));
     } else {

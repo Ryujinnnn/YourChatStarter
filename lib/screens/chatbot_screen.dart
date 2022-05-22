@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'dart:typed_data';
 
 import 'package:bubble/bubble.dart';
+import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -10,6 +11,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:markdown/markdown.dart' as md;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:speech_to_text/speech_recognition_result.dart';
@@ -18,6 +20,7 @@ import 'package:text_to_speech/text_to_speech.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:your_chat_starter/components/web_view.dart';
 import 'package:your_chat_starter/constants.dart';
+import 'package:your_chat_starter/models/app_opening.dart';
 import 'package:your_chat_starter/models/message_request_model.dart';
 import 'package:your_chat_starter/screens/sign_in/login_screen.dart';
 import 'package:your_chat_starter/screens/upgrade_screen.dart';
@@ -44,7 +47,7 @@ class ChatBotScreenState extends State<ChatBotScreen> {
   SpeechToText _speechToText = SpeechToText();
   TextToSpeech _textToSpeech = TextToSpeech();
   double volume = 1;
-  double rate = 1;
+  double rate = valueRate;
   bool speechEnabled = false;
   bool haveMap = false;
   late String location;
@@ -56,9 +59,42 @@ class ChatBotScreenState extends State<ChatBotScreen> {
     "Đồng Hới ở đâu?",
     "Thời tiết Thành phố Hồ Chí Minh hôm nay"
   ];
-  late SettingRespondModel settingRespondModel =
-      SettingRespondModel(desc: "", status: "");
-  late String languageCode;
+  List<AppOpening> appList = [
+    AppOpening(appName: "zalo", packageName: "com.zing.zalo"),
+    AppOpening(appName: "shopee", packageName: "com.shopee.vn"),
+    AppOpening(appName: "tiktok", packageName: "com.ss.android.ugc.trill"),
+    AppOpening(appName: "snapchat", packageName: "com.snapchat.android"),
+    AppOpening(appName: "lazada", packageName: "com.lazada.android"),
+    AppOpening(appName: "facebook", packageName: "com.facebook.katana"),
+    AppOpening(appName: "messenger", packageName: "com.facebook.orca"),
+    AppOpening(appName: "instagram", packageName: "com.instagram.android"),
+    AppOpening(appName: "zingmp3", packageName: "com.zing.mp3"),
+    AppOpening(appName: "tv360", packageName: "com.viettel.tv360"),
+    AppOpening(appName: "telegram", packageName: "org.telegram.messenger"),
+    AppOpening(appName: "viber", packageName: "com.viber.voip"),
+    AppOpening(appName: "skype", packageName: "com.skype.raider"),
+    AppOpening(appName: "momo", packageName: "com.mservice.momotransfer"),
+    AppOpening(appName: "grab", packageName: "com.grabtaxi.passenger"),
+    AppOpening(appName: "youtube", packageName: "com.google.android.youtube"),
+    AppOpening(appName: "bilibili", packageName: "com.bstar.intl"),
+    AppOpening(appName: "twitter", packageName: "com.twitter.android"),
+    AppOpening(appName: "spotify", packageName: "com.spotify.music"),
+    AppOpening(appName: "gmail", packageName: "com.google.android.gm"),
+    AppOpening(appName: "netflix", packageName: "com.netflix.mediaclient"),
+    AppOpening(appName: "word", packageName: "com.microsoft.office.word"),
+    AppOpening(appName: "discord", packageName: "com.discord"),
+    AppOpening(appName: "chrome", packageName: "com.android.chrome"),
+    AppOpening(appName: "duolingo", packageName: "com.duolingo"),
+    AppOpening(appName: "maps", packageName: "com.google.android.apps.maps"),
+    AppOpening(appName: "contacts", packageName: "com.google.android.contacts"),
+    AppOpening(appName: "dialer", packageName: "com.google.android.dialer"),
+    AppOpening(
+        appName: "messaging", packageName: "com.google.android.apps.messaging"),
+    AppOpening(
+        appName: "camera", packageName: "com.google.android.GoogleCamera"),
+    AppOpening(appName: "clock", packageName: "com.google.android.deskclock")
+  ];
+  String languageCode = "";
   MessageRespondModel preRespond = MessageRespondModel(response: "temp");
   Map<String, dynamic> contextString = {};
   var fltNotification = FlutterLocalNotificationsPlugin();
@@ -228,8 +264,7 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                 size: 35,
               ),
               onPressed: () {
-                if (settingRespondModel.preference.allowVoiceRecording ==
-                    true) {
+                if (s2tvalue == true) {
                   _speechToText.isNotListening
                       ? _startListening()
                       : _stopListening();
@@ -289,8 +324,23 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                       isBot: true);
 
                   if (respond.action.action == "REQUEST_OPENAPP") {
-                    //Thêm code mở app tại đây
+                    String appName = respond.action.data.message
+                        .toLowerCase()
+                        .replaceAll("app:", "");
+                    var index =
+                        appList.indexWhere((val) => val.appName == appName);
+                    await LaunchApp.openApp(
+                        androidPackageName: appList[index].packageName,
+                        openStore: true
+                        // iOS code
+                        //iosUrlScheme: 'googlegmail://',
+                        // appStoreLink:
+                        //     'itms-apps://itunes.apple.com/us/app/pulse-secure/id945832041',
+                        //
+                        //
+                        );
                   }
+
                   if (respond.action.action == "REQUEST_NOTIFICATION") {
                     _showNotification(
                         respond.action.data.message
@@ -310,7 +360,7 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                     suggestions = respond.context.suggestionList;
                     contextString = respond.contextString;
                   });
-                  if (settingRespondModel.preference.allowAutoT2s == true) {
+                  if (t2svalue == true) {
                     speak(res.response);
                   }
                 }
@@ -319,7 +369,7 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                   currentFocus.unfocus();
                 }
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.send,
                 size: 30,
                 color: kPrimaryColor,
@@ -385,20 +435,10 @@ class ChatBotScreenState extends State<ChatBotScreen> {
   }
 
   void fetchData() async {
-    bool isLoggedIn = await SharedService.isLoggedIn();
-    if (isLoggedIn) {
-      var model = await APIService.getSetting();
-      setState(() {
-        settingRespondModel = model;
-        rate = model.preference.voiceRate;
-        if (model.preference.voiceSelection != "") {
-          print(model.preference.voiceSelection);
-          languageCode = model.preference.voiceSelection;
-        } else {
-          getDefaultLanguage();
-        }
-      });
-    }
+    setState(() {
+      rate = valueRate;
+      loadVocal();
+    });
   }
 
   Future<void> _showNotification(String title, String isoDatetime) async {
@@ -440,10 +480,17 @@ class ChatBotScreenState extends State<ChatBotScreen> {
     );
   }
 
+  void loadVocal() async {
+    final prefs = await SharedPreferences.getInstance();
+    print(prefs.getString('selectedLanguage'));
+    languageCode = prefs.getString('selectedLanguage').toString();
+  }
+
   void speak(String text) {
     _textToSpeech.setVolume(volume);
     _textToSpeech.setRate(rate);
-    if (languageCode != null) {
+    if (languageCode != "") {
+      print(languageCode);
       _textToSpeech.setLanguage(languageCode);
     }
     final newText = text.replaceAllMapped(
@@ -458,17 +505,6 @@ class ChatBotScreenState extends State<ChatBotScreen> {
     speechEnabled = await _speechToText.initialize();
 
     setState(() {});
-  }
-
-  void getDefaultLanguage() async {
-    var language = await _textToSpeech.getLanguages();
-    var index = language.indexWhere((val) => val == "vi-VN");
-    if (index == -1) {
-      //pop up warning no vietnamese speech reg
-      return;
-    }
-    //get vietnamese language code
-    languageCode = language[index];
   }
 
   void _startListening() async {
@@ -547,7 +583,15 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                 }));
               }
             },
-            icon: const Icon(Icons.manage_accounts_rounded, size: 25))
+            icon: const Icon(Icons.manage_accounts_rounded, size: 25)),
+        IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute<bool>(builder: (BuildContext context) {
+                return const SettingScreen();
+              }));
+            },
+            icon: const Icon(Icons.settings, size: 25))
       ],
     );
   }

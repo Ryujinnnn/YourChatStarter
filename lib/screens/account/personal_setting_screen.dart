@@ -5,9 +5,11 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'package:your_chat_starter/constants.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:your_chat_starter/screens/chatbot_screen.dart';
 import '../../models/setting_request.dart';
 import '../../services/api_service.dart';
+import '../../services/shared_service.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({Key? key}) : super(key: key);
@@ -16,19 +18,20 @@ class SettingScreen extends StatefulWidget {
   _SettingScreenState createState() => _SettingScreenState();
 }
 
+bool t2svalue = false;
+bool s2tvalue = false;
+bool notivalue = false;
+double valueRate = 1.0;
+String selectedItemLanguage = "";
+
 class _SettingScreenState extends State<SettingScreen> {
   bool circular = true;
-  bool t2svalue = false;
-  bool s2tvalue = false;
-  bool notivalue = false;
-  double valueRate = 1.0;
   bool isAPIcallProcess = false;
   String? _externalUserId;
   TextToSpeech _textToSpeech = TextToSpeech();
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
   List<String> itemLanguages = [""];
   String defaultItemLanguage = "";
-  String selectedItemLanguage = "";
 
   @override
   void initState() {
@@ -79,12 +82,18 @@ class _SettingScreenState extends State<SettingScreen> {
                         allowAutoT2s: t2svalue,
                         allowPushNotification: notivalue,
                         allowVoiceRecording: s2tvalue,
-                        voiceSelection: selectedItemLanguage,
                         voiceRate: valueRate));
                     setState(() {
                       isAPIcallProcess = false;
+                      saveLocalData();
+                      saveVocal();
                     });
-                    Navigator.of(context).pop();
+                    saveLocalData();
+                    saveVocal();
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => const ChatBotScreen()),
+                        (Route<dynamic> route) => false);
                   },
                   icon: Icon(Icons.check))
             ],
@@ -178,7 +187,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         onTap: () {
                           setState(() {
                             notivalue = !notivalue;
-                            OneSignal.shared.disablePush(notivalue);
+                            OneSignal.shared.disablePush(!notivalue);
                           });
                         },
                         leading: Checkbox(
@@ -238,9 +247,7 @@ class _SettingScreenState extends State<SettingScreen> {
                           border: Border.all(color: kPrimaryColor, width: 1)),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
-                          value: (selectedItemLanguage != "")
-                              ? selectedItemLanguage
-                              : defaultItemLanguage,
+                          value: selectedItemLanguage,
                           isExpanded: true,
                           items: itemLanguages.map(buildMenuItem).toList(),
                           onChanged: (value) {
@@ -278,19 +285,59 @@ class _SettingScreenState extends State<SettingScreen> {
     defaultItemLanguage = language[index];
   }
 
+  void saveLocalData() async {
+    // Obtain shared preferences.
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('s2tvalue', s2tvalue);
+    await prefs.setBool('t2svalue', t2svalue);
+    await prefs.setBool('notivalue', notivalue);
+    await prefs.setDouble('valueRate', valueRate);
+  }
+
+  void saveVocal() async {
+    final prefs = await SharedPreferences.getInstance();
+    (selectedItemLanguage != "") ? selectedItemLanguage : defaultItemLanguage;
+    print(selectedItemLanguage);
+    await prefs.setString('selectedLanguage', selectedItemLanguage);
+  }
+
+  void loadVocal() async {
+    final prefs = await SharedPreferences.getInstance();
+    print(prefs.getString('selectedLanguage'));
+    if (prefs.getString('selectedLanguage') != defaultItemLanguage) {
+      selectedItemLanguage = prefs.getString('selectedLanguage').toString();
+    } else {
+      selectedItemLanguage = defaultItemLanguage;
+    }
+  }
+
+  void loadLocalData() async {
+    final prefs = await SharedPreferences.getInstance();
+    s2tvalue = prefs.getBool('s2tvalue')!;
+    t2svalue = prefs.getBool('t2svalue')!;
+    notivalue = prefs.getBool('notivalue')!;
+    valueRate = prefs.getDouble('valueRate')!;
+  }
+
   void fetchData() async {
     var model = await APIService.getSetting();
-    setState(() {
-      circular = false;
+    if (model.status == "failed") {
       setState(() {
-        s2tvalue = model.preference.allowVoiceRecording;
-        t2svalue = model.preference.allowAutoT2s;
-        notivalue = model.preference.allowPushNotification;
-        valueRate = model.preference.voiceRate;
-        if (model.preference.voiceSelection != null) {
-          selectedItemLanguage = model.preference.voiceSelection;
-        }
+        circular = false;
+        loadLocalData();
+        loadVocal();
       });
-    });
+    } else {
+      setState(() {
+        circular = false;
+        setState(() {
+          s2tvalue = model.preference.allowVoiceRecording;
+          t2svalue = model.preference.allowAutoT2s;
+          notivalue = model.preference.allowPushNotification;
+          valueRate = model.preference.voiceRate;
+          loadVocal();
+        });
+      });
+    }
   }
 }
