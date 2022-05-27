@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:bubble/bubble.dart';
 import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -18,6 +19,7 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:your_chat_starter/components/chat_message.dart';
 import 'package:your_chat_starter/components/web_view.dart';
 import 'package:your_chat_starter/constants.dart';
 import 'package:your_chat_starter/models/app_opening.dart';
@@ -53,7 +55,8 @@ class ChatBotScreenState extends State<ChatBotScreen> {
   late String location;
 
   final TextEditingController messController = TextEditingController();
-  List<MessageValueHolder> messages = [];
+  List<ChatMessage> messages = [];
+
   List<String> suggestions = [
     "Chào bạn!",
     "Đồng Hới ở đâu?",
@@ -115,8 +118,20 @@ class ChatBotScreenState extends State<ChatBotScreen> {
     );
   }
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
+    //FIXME: Scroll sai
+    WidgetsBinding.instance?.addPostFrameCallback((_) => {
+          Timer(Duration(milliseconds: 200), () {
+            _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut);
+          })
+        });
+
     return Scaffold(
       appBar: buildAppBar(context),
       body: chatBody(context),
@@ -128,21 +143,25 @@ class ChatBotScreenState extends State<ChatBotScreen> {
           const SizedBox(
             height: kDefaultPadding,
           ),
-          Expanded(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                  child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      reverse: true,
-                      itemCount: messages.length,
-                      itemBuilder: ((context, index) =>
-                          chatMessage(messages[index]))))
-            ],
-          )),
+          Container(
+            child: Expanded(
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                    child: ListView.builder(
+                        controller: _scrollController,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        reverse: false,
+                        itemCount: messages.length,
+                        itemBuilder: ((context, index) {
+                          return ChatMessage(message: messages[index].message);
+                        })))
+              ],
+            )),
+          ),
           haveMap ? mapWidget(location) : Container(),
           suggestions.isNotEmpty
               ? Container(
@@ -165,88 +184,6 @@ class ChatBotScreenState extends State<ChatBotScreen> {
           chatInput(context)
         ],
       );
-
-  Scaffold webView(String url) {
-    return Scaffold(
-        appBar: AppBar(
-          leading: Builder(builder: (BuildContext context) {
-            return IconButton(
-              icon: Icon(
-                Icons.chevron_left,
-                color: kPrimaryColor,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            );
-          }),
-          title: Text(
-            url,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              fontSize: 13.0,
-            ),
-          ),
-          backgroundColor: Colors.white10,
-          elevation: 0,
-        ),
-        body: WebView(initialUrl: url));
-  }
-
-  Widget chatMessage(MessageValueHolder message) {
-    return Row(
-      mainAxisAlignment: message.isBot == false
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: kDefaultPadding * 0.75,
-              vertical: kDefaultPadding / 2),
-          child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
-                color: message.isBot == false
-                    ? kPrimaryColor
-                    : kPrimaryColor.withOpacity(0.4),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: kDefaultPadding * 0.75,
-                  right: kDefaultPadding * 0.75,
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: message.isBot == false
-                      ? MainAxisAlignment.end
-                      : MainAxisAlignment.start,
-                  children: <Widget>[
-                    Flexible(
-                      child: Container(
-                          constraints: const BoxConstraints(maxWidth: 180),
-                          child: Html(
-                              data: md.markdownToHtml(message.response),
-                              onLinkTap: (url, _, __, ___) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            webView(url.toString())));
-                              },
-                              onImageTap: (src, _, __, ___) {
-                                showDialog(
-                                    context: context,
-                                    builder: (_) =>
-                                        ImageDialog(src.toString()));
-                              })),
-                    ),
-                  ],
-                ),
-              )),
-        )
-      ],
-    );
-  }
 
   Container chatInput(context) {
     return Container(
@@ -304,10 +241,13 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                 if (messController.text.isEmpty) {
                   print("empty message");
                 } else {
-                  MessageValueHolder mess = MessageValueHolder(
-                      response: messController.text, context: {}, isBot: false);
+                  ChatMessage mess = ChatMessage(
+                      message: MessageValueHolder(
+                          response: messController.text,
+                          context: {},
+                          isBot: false));
                   setState(() {
-                    messages.insert(0, mess);
+                    messages.add(mess);
                   });
                   String saveMess = messController.text;
                   messController.clear();
@@ -316,12 +256,13 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                           post: saveMess,
                           isLocal: true,
                           contextString: contextString));
-                  MessageValueHolder res = MessageValueHolder(
-                      response: respond.response.replaceAllMapped(
-                          RegExp(r'\[https.*\]', caseSensitive: false),
-                          (match) => ""),
-                      context: respond.contextString,
-                      isBot: true);
+                  ChatMessage res = ChatMessage(
+                      message: MessageValueHolder(
+                          response: respond.response.replaceAllMapped(
+                              RegExp(r'\[https.*\]', caseSensitive: false),
+                              (match) => ""),
+                          context: respond.contextString,
+                          isBot: true));
 
                   if (respond.action.action == "REQUEST_OPENAPP") {
                     String appName = respond.action.data.message
@@ -355,13 +296,13 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                     location = "";
                   }
                   setState(() {
-                    messages.insert(0, res);
+                    messages.add(res);
                     preRespond = respond;
                     suggestions = respond.context.suggestionList;
                     contextString = respond.contextString;
                   });
                   if (t2svalue == true) {
-                    speak(res.response);
+                    speak(res.message.response);
                   }
                 }
                 FocusScopeNode currentFocus = FocusScope.of(context);
