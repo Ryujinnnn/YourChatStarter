@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
+import 'package:your_chat_starter/screens/account/about_screen.dart';
 import 'package:your_chat_starter/screens/account/font_screen.dart';
 import 'package:your_chat_starter/screens/account/info_screen.dart';
 import 'package:your_chat_starter/screens/account/password_screen.dart';
@@ -304,11 +305,11 @@ class _AccountScreenState extends State<AccountScreen> {
                       const SizedBox(height: 20),
                       GestureDetector(
                           onTap: () {
-                            // Navigator.of(context).push(CustomPageRoute(
-                            //     pageBuilder:
-                            //         (context, animation, secondaryAnimation) =>
-                            //             PasswordScreen(),
-                            //     direction: AxisDirection.up));
+                            Navigator.of(context).push(CustomPageRoute(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        AboutScreen(),
+                                direction: AxisDirection.up));
                           },
                           child: Row(
                             children: [

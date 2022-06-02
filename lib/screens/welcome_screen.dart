@@ -19,15 +19,10 @@ class WelcomeScreen extends StatelessWidget {
           child: Column(
             children: [
               Spacer(flex: 2),
-              isDarkMode
-                  ? Image.asset(
-                      "assets/images/logo.png",
-                      height: 146,
-                    )
-                  : Image.asset(
-                      "assets/images/logo_light.png",
-                      height: 146,
-                    ),
+              Image.asset(
+                "assets/images/logo.png",
+                height: 146,
+              ),
               Spacer(),
               PrimaryButton(
                   text: "Bắt đầu",
