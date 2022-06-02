@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:your_chat_starter/models/login_request.dart';
+import 'package:your_chat_starter/screens/account/theme_screen.dart';
 import 'package:your_chat_starter/screens/chatbot_screen.dart';
 import 'package:your_chat_starter/screens/sign_in/login_screen.dart';
 import 'package:your_chat_starter/screens/welcome_screen.dart';
@@ -12,6 +14,11 @@ import 'package:your_chat_starter/theme.dart';
 
 bool isLogin = false;
 late String externalUserId;
+ThemeGroup? savedTheme;
+
+Color kPrimaryColor = Color(0xFF00BF6D);
+Color kSecondaryColor = Color.fromARGB(223, 0, 114, 0);
+Color kBackgroundColor = Colors.black;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,25 +46,54 @@ Future<void> main() async {
       print("Accepted permission: $accepted");
     });
   }
+  loadThemeData();
 
   runApp(const MyApp());
 }
 
-Map<String, WidgetBuilder> route = {
-  "/chatbot": (context) => const ChatBotScreen(),
-  "/login": (context) => const LoginScreen()
-};
+void loadThemeData() async {
+  final prefs = await SharedPreferences.getInstance();
+  String? localSaved = prefs.getString('themeValue');
+  savedTheme = ThemeGroup.values.firstWhere((e) => e.toString() == localSaved);
+}
+
+void theming() {
+  switch (savedTheme) {
+    case ThemeGroup.green:
+      kPrimaryColor = const Color(0xFF00BF6D);
+      kSecondaryColor = Color.fromARGB(223, 0, 114, 0);
+      break;
+    case ThemeGroup.cherry:
+      kPrimaryColor = const Color(0xFFC6246D);
+      kSecondaryColor = const Color(0xFF89123A);
+      break;
+    case ThemeGroup.sunshine:
+      kPrimaryColor = Colors.amber;
+      kSecondaryColor = const Color(0xFFFE9901);
+      break;
+    case ThemeGroup.tropical:
+      kPrimaryColor = const Color(0xFF00BF6D);
+      kSecondaryColor = const Color(0xFFFE9901);
+      break;
+    default:
+      {
+        kPrimaryColor = const Color(0xFF00BF6D);
+        kSecondaryColor = Color.fromARGB(223, 0, 114, 0);
+      }
+      break;
+  }
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    theming();
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Your Chat Starter',
       debugShowCheckedModeBanner: false,
-      theme: lightThemeData(context),
-      darkTheme: darkThemeData(context),
+      theme: themeData(context),
       home: WelcomeScreen(),
     );
   }

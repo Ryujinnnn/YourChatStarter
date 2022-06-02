@@ -25,11 +25,19 @@ class MessageRequestModel {
 }
 
 class Context {
-  late List<String> suggestionList;
+  late List<String?> suggestionList;
   Context({required this.suggestionList});
-
+  List<String> defaultSuggestions = [
+    "Tin tức",
+    "Thời tiết",
+    "Giá tiền ảo bitcoin"
+  ];
   Context.fromJson(Map<String, dynamic> json) {
-    suggestionList = json['suggestion_list'].cast<String>();
+    if ((json['suggestion_list'] as List).first != null) {
+      suggestionList = json['suggestion_list'].cast<String>();
+    } else {
+      suggestionList = defaultSuggestions;
+    }
   }
 
   Map<String, dynamic> toJson() {

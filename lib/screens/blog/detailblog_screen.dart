@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:string_to_hex/string_to_hex.dart';
+import 'package:your_chat_starter/main.dart';
 import '../../constants.dart';
 import '../../models/detail_blog_request.dart';
 import '../../models/detail_blog_respond.dart';
 import '../../services/api_service.dart';
+import '../account/font_screen.dart';
 
 class DetailBlogWidget extends StatefulWidget {
   final String id;
@@ -41,7 +43,7 @@ class _DetailBlogWidgetState extends State<DetailBlogWidget> {
             gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              colors: <Color>[kPrimaryColor, kPrimaryColor],
+              colors: <Color>[kPrimaryColor, kSecondaryColor],
             ),
           ),
         ),
@@ -138,8 +140,9 @@ class _DetailBlogWidgetState extends State<DetailBlogWidget> {
                     Container(
                         child: Markdown(
                       styleSheet: MarkdownStyleSheet(
-                          p: TextStyle(height: 1.5),
-                          textAlign: WrapAlignment.spaceAround),
+                        p: TextStyle(height: 1.5, fontSize: fontSize),
+                        textAlign: WrapAlignment.spaceAround,
+                      ),
                       data: model.blog.content,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),

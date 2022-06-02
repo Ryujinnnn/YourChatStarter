@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:your_chat_starter/components/primary_button.dart';
 import 'package:your_chat_starter/constants.dart';
+import 'package:your_chat_starter/main.dart';
 
 import '../../components/password_field.dart';
 import '../../components/rounded_text_field.dart';
@@ -27,13 +28,13 @@ class SignUpScreen extends StatelessWidget {
         Container(
           width: size.width,
           height: size.height / 5,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
                     kPrimaryColor,
-                    kPrimaryColor,
+                    kSecondaryColor,
                   ]),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(100),

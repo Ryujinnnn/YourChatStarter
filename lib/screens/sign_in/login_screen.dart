@@ -54,13 +54,13 @@ class LoginScreenState extends State<LoginScreen> {
         Container(
           width: size.width,
           height: size.height / 5,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
                     kPrimaryColor,
-                    kPrimaryColor,
+                    kSecondaryColor,
                   ]),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(100),
@@ -144,7 +144,7 @@ class LoginScreenState extends State<LoginScreen> {
                               content: const Text("Wrong email or password"),
                               actions: <Widget>[
                                 FlatButton(
-                                  child: const Text(
+                                  child: Text(
                                     "OK",
                                     style: TextStyle(color: kPrimaryColor),
                                   ),

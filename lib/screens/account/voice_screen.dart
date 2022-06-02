@@ -6,16 +6,17 @@ import 'package:snippet_coder_utils/ProgressHUD.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'package:your_chat_starter/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:your_chat_starter/main.dart';
 import 'package:your_chat_starter/screens/chatbot_screen.dart';
 import '../../models/setting_request.dart';
 import '../../services/api_service.dart';
 import '../../services/shared_service.dart';
 
-class SettingScreen extends StatefulWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+class VoiceScreen extends StatefulWidget {
+  const VoiceScreen({Key? key}) : super(key: key);
 
   @override
-  _SettingScreenState createState() => _SettingScreenState();
+  _VoiceScreenState createState() => _VoiceScreenState();
 }
 
 bool t2svalue = false;
@@ -24,7 +25,7 @@ bool notivalue = false;
 double valueRate = 1.0;
 String selectedItemLanguage = "";
 
-class _SettingScreenState extends State<SettingScreen> {
+class _VoiceScreenState extends State<VoiceScreen> {
   bool circular = true;
   bool isAPIcallProcess = false;
   String? _externalUserId;
@@ -55,7 +56,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: <Color>[kPrimaryColor, kPrimaryColor],
+                  colors: <Color>[kPrimaryColor, kSecondaryColor],
                 ),
               ),
             ),

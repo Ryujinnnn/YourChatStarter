@@ -1,5 +1,6 @@
 import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
+import 'package:your_chat_starter/main.dart';
 import 'package:your_chat_starter/screens/payment_screen.dart';
 
 import '../constants.dart';
@@ -23,7 +24,7 @@ class _UpgradeActivityState extends State<UpgradeActivity> {
             gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              colors: <Color>[kPrimaryColor, kPrimaryColor],
+              colors: <Color>[kPrimaryColor, kSecondaryColor],
             ),
           ),
         ),

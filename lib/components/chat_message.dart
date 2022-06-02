@@ -6,7 +6,11 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:your_chat_starter/components/image_dialog.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:your_chat_starter/constants.dart';
+import 'package:your_chat_starter/main.dart';
 import 'package:your_chat_starter/models/message_value.dart';
+
+import '../screens/account/font_screen.dart';
+import 'custom_page_route.dart';
 
 class ChatMessage extends StatefulWidget {
   final MessageValueHolder message;
@@ -42,15 +46,15 @@ class ChatMessageState extends State<ChatMessage>
           child: ScaleTransition(
             scale: _animation,
             child: Bubble(
-                padding: BubbleEdges.all(2),
-                shadowColor: Colors.green,
+                padding: const BubbleEdges.all(2),
+                elevation: 0,
                 alignment: Alignment.topRight,
                 nip: message.isBot == false
                     ? BubbleNip.rightTop
-                    : BubbleNip.leftTop,
+                    : BubbleNip.leftBottom,
                 color: message.isBot == false
                     ? kPrimaryColor
-                    : kPrimaryColor.withOpacity(0.4),
+                    : kSecondaryColor.withOpacity(0.6),
                 child: Padding(
                   padding: const EdgeInsets.only(
                     left: kDefaultPadding * 0.75,
@@ -67,12 +71,20 @@ class ChatMessageState extends State<ChatMessage>
                             constraints: const BoxConstraints(maxWidth: 180),
                             child: Html(
                                 data: md.markdownToHtml(message.response),
+                                style: {
+                                  "body": Style(
+                                    fontSize: FontSize(fontSize),
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                },
                                 onLinkTap: (url, _, __, ___) {
                                   Navigator.push(
                                       context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              webView(url.toString())));
+                                      CustomPageRoute(
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              webView(url.toString()),
+                                          direction: AxisDirection.up));
                                 },
                                 onImageTap: (src, _, __, ___) {
                                   showDialog(

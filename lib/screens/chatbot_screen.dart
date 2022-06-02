@@ -20,6 +20,7 @@ import 'package:speech_to_text/speech_to_text.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:your_chat_starter/components/chat_message.dart';
+import 'package:your_chat_starter/components/custom_page_route.dart';
 import 'package:your_chat_starter/components/web_view.dart';
 import 'package:your_chat_starter/constants.dart';
 import 'package:your_chat_starter/models/app_opening.dart';
@@ -34,8 +35,8 @@ import '../models/message_respond.dart';
 import '../models/setting_respond.dart';
 import '../services/api_service.dart';
 import '../services/shared_service.dart';
-import 'account/info_setting_screen.dart';
-import 'account/personal_setting_screen.dart';
+import 'account/account_screen.dart';
+import 'account/voice_screen.dart';
 import 'blog/blog_screen.dart';
 
 class ChatBotScreen extends StatefulWidget {
@@ -57,10 +58,15 @@ class ChatBotScreenState extends State<ChatBotScreen> {
   final TextEditingController messController = TextEditingController();
   List<ChatMessage> messages = [];
 
-  List<String> suggestions = [
+  List<String?> suggestions = [
     "Chào bạn!",
     "Đồng Hới ở đâu?",
     "Thời tiết Thành phố Hồ Chí Minh hôm nay"
+  ];
+  List<String> defaultSuggestions = [
+    "Tin tức",
+    "Thời tiết",
+    "Giá tiền ảo bitcoin"
   ];
   List<AppOpening> appList = [
     AppOpening(appName: "zalo", packageName: "com.zing.zalo"),
@@ -176,8 +182,13 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             itemCount: suggestions.length,
-                            itemBuilder: (context, index) => Center(
-                                child: suggestionBubble(suggestions[index]))),
+                            itemBuilder: (context, index) {
+                              return Center(
+                                  child: (suggestions[index] != null)
+                                      ? suggestionBubble(
+                                          suggestions[index].toString())
+                                      : Container());
+                            }),
                       )),
                 )
               : Container(),
@@ -310,7 +321,7 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                   currentFocus.unfocus();
                 }
               },
-              icon: const Icon(
+              icon: Icon(
                 Icons.send,
                 size: 30,
                 color: kPrimaryColor,
@@ -489,50 +500,46 @@ class ChatBotScreenState extends State<ChatBotScreen> {
     return AppBar(
       automaticallyImplyLeading: false,
       flexibleSpace: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: <Color>[kPrimaryColor, kPrimaryColor],
+            colors: <Color>[kPrimaryColor, kSecondaryColor],
           ),
         ),
       ),
       title: Image.asset(
         'assets/images/logo.png',
         fit: BoxFit.fitHeight,
-        height: 60,
+        height: 50,
       ),
       actions: [
         IconButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => BlogScreen()));
+              Navigator.of(context).push(CustomPageRoute(
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      BlogScreen(),
+                  direction: AxisDirection.right));
             },
             icon: const Icon(Icons.article_outlined, size: 25)),
         IconButton(
             onPressed: () async {
               bool isLoggedIn = await SharedService.isLoggedIn();
               if (isLoggedIn) {
-                Navigator.of(context).push(
-                    MaterialPageRoute<bool>(builder: (BuildContext context) {
-                  return ProfileScreen();
-                })).then(onGoBack);
+                Navigator.of(context)
+                    .push(CustomPageRoute(
+                        pageBuilder: (context, animation, secondaryAnimation) =>
+                            AccountScreen(),
+                        direction: AxisDirection.down))
+                    .then(onGoBack);
               } else {
-                Navigator.of(context).push(
-                    MaterialPageRoute<bool>(builder: (BuildContext context) {
-                  return const LoginScreen();
-                }));
+                Navigator.of(context).push(CustomPageRoute(
+                    pageBuilder: (context, animation, secondaryAnimation) =>
+                        const LoginScreen(),
+                    direction: AxisDirection.down));
               }
             },
-            icon: const Icon(Icons.manage_accounts_rounded, size: 25)),
-        IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute<bool>(builder: (BuildContext context) {
-                return const SettingScreen();
-              }));
-            },
-            icon: const Icon(Icons.settings, size: 25))
+            icon: const Icon(Icons.person, size: 25)),
       ],
     );
   }

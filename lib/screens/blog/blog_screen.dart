@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:your_chat_starter/constants.dart';
+import 'package:your_chat_starter/main.dart';
 
 import '../../services/api_service.dart';
 import 'blog_widget.dart';
@@ -50,7 +51,7 @@ class _BlogScreenState extends State<BlogScreen> {
               gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: <Color>[kPrimaryColor, kPrimaryColor],
+                colors: <Color>[kPrimaryColor, kSecondaryColor],
               ),
             ),
           ),
