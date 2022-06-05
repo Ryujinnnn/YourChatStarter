@@ -30,10 +30,10 @@ class Context {
   List<String> defaultSuggestions = [
     "Tin tức",
     "Thời tiết",
-    "Giá tiền ảo bitcoin"
+    "Hôm nay là thứ mấy"
   ];
   Context.fromJson(Map<String, dynamic> json) {
-    if ((json['suggestion_list'] as List).first != null) {
+    if ((json['suggestion_list'] as List).last != null) {
       suggestionList = json['suggestion_list'].cast<String>();
     } else {
       suggestionList = defaultSuggestions;

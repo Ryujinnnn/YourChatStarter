@@ -19,7 +19,7 @@ import '../../models/edit_request.dart';
 import '../../models/profile_respond.dart';
 import '../../services/api_service.dart';
 import '../../services/shared_service.dart';
-import '../upgrade_screen.dart';
+import 'upgrade_screen.dart';
 
 class InfoScreen extends StatefulWidget {
   @override

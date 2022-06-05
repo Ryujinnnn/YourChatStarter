@@ -16,7 +16,7 @@ import '../../main.dart';
 import '../../models/profile_respond.dart';
 import '../../services/api_service.dart';
 import '../../services/shared_service.dart';
-import '../upgrade_screen.dart';
+import 'upgrade_screen.dart';
 
 class AccountScreen extends StatefulWidget {
   @override
@@ -98,23 +98,15 @@ class _AccountScreenState extends State<AccountScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
+                    const SizedBox(
                       height: 50,
                       width: 50,
-                      child: RawMaterialButton(
-                        onPressed: () {},
-                        elevation: 2.0,
-                        fillColor: kContentColorDarkTheme.withOpacity(0.1),
-                        child: Icon(
-                          Icons.question_mark_outlined,
-                          color: kPrimaryColor,
-                          size: 20,
-                        ),
-                        padding: EdgeInsets.all(10.0),
-                        shape: CircleBorder(),
+                      child: CircleAvatar(
+                        backgroundImage:
+                            AssetImage("assets/images/logo-mini.png"),
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Column(
                       children: [
                         Text(

@@ -97,13 +97,6 @@ class LoginScreenState extends State<LoginScreen> {
         SizedBox(
           height: size.height * 0.015,
         ),
-        Container(
-          alignment: Alignment.center,
-          child: Text(
-            "Quên mật khẩu?",
-            style: TextStyle(fontSize: 16.0, color: kPrimaryColor),
-          ),
-        ),
         SizedBox(
           height: size.height * 0.05,
         ),

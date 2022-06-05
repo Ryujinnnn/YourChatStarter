@@ -36,7 +36,7 @@ class SignUpScreen extends StatelessWidget {
                     kPrimaryColor,
                     kSecondaryColor,
                   ]),
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(100),
                 bottomRight: Radius.circular(100),
               )),

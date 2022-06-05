@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:your_chat_starter/main.dart';
 
-import '../constants.dart';
+import '../../constants.dart';
 
 class PaymentScreen extends StatefulWidget {
   final String planName;

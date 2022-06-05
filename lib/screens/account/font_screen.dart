@@ -19,8 +19,8 @@ class FontScreen extends StatefulWidget {
 }
 
 double fontSize = 15;
-String selectedFontStyle = "Arial";
-List<String> fontList = ["Arial"];
+String selectedFontStyle = "Roboto";
+List<String> fontList = ["Roboto"];
 
 class _FontScreenState extends State<FontScreen> {
   bool circular = true;
@@ -38,7 +38,7 @@ class _FontScreenState extends State<FontScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      backgroundColor: const Color(0xFF1D1D35),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         brightness: Brightness.dark,
         automaticallyImplyLeading: false,
@@ -52,9 +52,9 @@ class _FontScreenState extends State<FontScreen> {
           ),
         ),
         title: Container(
-          child: const Text(
+          child: Text(
             "Phông chữ",
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
         ),
         leading: IconButton(
@@ -97,19 +97,19 @@ class _FontScreenState extends State<FontScreen> {
                 },
                 child: ListView(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 20.0, top: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0, top: 10),
                       child: Text("Cỡ chữ: ",
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white)),
+                              color: Theme.of(context).iconTheme.color)),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           "A",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 10),
@@ -132,33 +132,49 @@ class _FontScreenState extends State<FontScreen> {
                             label: "$fontSize",
                           ),
                         ),
-                        Text(
+                        const Text(
                           "A",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 25),
                         ),
                       ],
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 20.0, top: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0, top: 10),
                       child: Text("Kiểu chữ: ",
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white)),
+                              color: Theme.of(context).iconTheme.color)),
                     ),
                     Container(
                       margin:
                           const EdgeInsets.only(left: 20, right: 20, top: 15),
-                      padding: const EdgeInsets.only(left: 15, right: 5),
+                      padding: const EdgeInsets.only(top: 30, left: 15),
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: kPrimaryColor, width: 1)),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: kPrimaryColor, width: 1),
+                      ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: selectedFontStyle,
-                          isExpanded: true,
-                          items: fontList.map(buildMenuItem).toList(),
+                          selectedItemBuilder: (BuildContext context) {
+                            return fontList.map((String value) {
+                              return Text(
+                                selectedFontStyle,
+                                style: TextStyle(
+                                    color: Theme.of(context).iconTheme.color),
+                              );
+                            }).toList();
+                          },
+                          //isExpanded: true,
+                          items: fontList
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
                           onChanged: (value) {
                             setState(() {
                               selectedFontStyle = value.toString();
@@ -167,13 +183,13 @@ class _FontScreenState extends State<FontScreen> {
                         ),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 20.0, top: 10),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0, top: 30),
                       child: Text("Xem trước: ",
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white)),
+                              color: Theme.of(context).iconTheme.color)),
                     ),
                     ChatMessage(
                         message: MessageValueHolder(

@@ -26,7 +26,7 @@ import 'package:your_chat_starter/constants.dart';
 import 'package:your_chat_starter/models/app_opening.dart';
 import 'package:your_chat_starter/models/message_request_model.dart';
 import 'package:your_chat_starter/screens/sign_in/login_screen.dart';
-import 'package:your_chat_starter/screens/upgrade_screen.dart';
+import 'package:your_chat_starter/screens/account/upgrade_screen.dart';
 import 'package:flutter_html/flutter_html.dart';
 import '../components/image_dialog.dart';
 import '../main.dart';
@@ -66,7 +66,7 @@ class ChatBotScreenState extends State<ChatBotScreen> {
   List<String> defaultSuggestions = [
     "Tin tức",
     "Thời tiết",
-    "Giá tiền ảo bitcoin"
+    "Hôm nay là thứ mấy"
   ];
   List<AppOpening> appList = [
     AppOpening(appName: "zalo", packageName: "com.zing.zalo"),

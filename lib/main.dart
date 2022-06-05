@@ -16,8 +16,8 @@ bool isLogin = false;
 late String externalUserId;
 ThemeGroup? savedTheme;
 
-Color kPrimaryColor = Color(0xFF00BF6D);
-Color kSecondaryColor = Color.fromARGB(223, 0, 114, 0);
+late Color kPrimaryColor;
+late Color kSecondaryColor;
 Color kBackgroundColor = Colors.black;
 
 Future<void> main() async {
@@ -31,7 +31,8 @@ Future<void> main() async {
       APIService.login(model);
     }
   }
-
+  loadThemeData();
+  theming();
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   OneSignal.shared.setAppId("c4f18d2d-08d5-450d-9865-3fe344cfb813");
 
@@ -46,7 +47,6 @@ Future<void> main() async {
       print("Accepted permission: $accepted");
     });
   }
-  loadThemeData();
 
   runApp(const MyApp());
 }
@@ -61,7 +61,7 @@ void theming() {
   switch (savedTheme) {
     case ThemeGroup.green:
       kPrimaryColor = const Color(0xFF00BF6D);
-      kSecondaryColor = Color.fromARGB(223, 0, 114, 0);
+      kSecondaryColor = const Color.fromARGB(223, 0, 114, 0);
       break;
     case ThemeGroup.cherry:
       kPrimaryColor = const Color(0xFFC6246D);
@@ -71,9 +71,9 @@ void theming() {
       kPrimaryColor = Colors.amber;
       kSecondaryColor = const Color(0xFFFE9901);
       break;
-    case ThemeGroup.tropical:
-      kPrimaryColor = const Color(0xFF00BF6D);
-      kSecondaryColor = const Color(0xFFFE9901);
+    case ThemeGroup.ocean:
+      kPrimaryColor = const Color.fromARGB(255, 45, 175, 250);
+      kSecondaryColor = const Color.fromARGB(255, 1, 102, 254);
       break;
     default:
       {
@@ -89,11 +89,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    loadThemeData();
     theming();
     return MaterialApp(
       title: 'Your Chat Starter',
       debugShowCheckedModeBanner: false,
-      theme: themeData(context),
+      theme: lightThemeData(context),
+      darkTheme: darkThemeData(context),
       home: WelcomeScreen(),
     );
   }

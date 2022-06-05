@@ -47,7 +47,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          backgroundColor: Color(0xFF1D1D35),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
             brightness: Brightness.dark,
             automaticallyImplyLeading: false,
@@ -62,7 +62,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
             ),
             title: Container(
               child: Text(
-                "Cài đặt",
+                "Âm thanh và thông báo",
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -129,7 +129,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                            color: Theme.of(context).iconTheme.color),
                       ),
                     ),
                     Theme(
@@ -153,7 +153,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                             }),
                         title: Text("Luôn phát âm phản hồi",
                             style: TextStyle(
-                                color: Colors.white.withOpacity(0.8))),
+                                color: Theme.of(context).iconTheme.color)),
                       ),
                     ),
                     Theme(
@@ -177,7 +177,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                             }),
                         title: Text("Cho phép ghi giọng nói",
                             style: TextStyle(
-                                color: Colors.white.withOpacity(0.8))),
+                                color: Theme.of(context).iconTheme.color)),
                       ),
                     ),
                     Theme(
@@ -203,7 +203,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                             }),
                         title: Text("Nhận thông báo từ dịch vụ",
                             style: TextStyle(
-                                color: Colors.white.withOpacity(0.8))),
+                                color: Theme.of(context).iconTheme.color)),
                       ),
                     ),
                     Padding(
@@ -212,7 +212,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white)),
+                              color: Theme.of(context).iconTheme.color)),
                     ),
                     SliderTheme(
                       data: SliderThemeData(
@@ -238,19 +238,37 @@ class _VoiceScreenState extends State<VoiceScreen> {
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white)),
+                              color: Theme.of(context).iconTheme.color)),
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 20, right: 20, top: 15),
-                      padding: EdgeInsets.only(left: 15, right: 5),
+                      margin:
+                          const EdgeInsets.only(left: 20, right: 20, top: 15),
+                      padding:
+                          const EdgeInsets.only(left: 15, right: 5, top: 30),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: kPrimaryColor, width: 1)),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           value: selectedItemLanguage,
+                          selectedItemBuilder: (BuildContext context) {
+                            return itemLanguages.map((String value) {
+                              return Text(
+                                selectedItemLanguage,
+                                style: TextStyle(
+                                    color: Theme.of(context).iconTheme.color),
+                              );
+                            }).toList();
+                          },
+                          //isExpanded: true,
+                          items: itemLanguages
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
                           isExpanded: true,
-                          items: itemLanguages.map(buildMenuItem).toList(),
                           onChanged: (value) {
                             setState(() {
                               selectedItemLanguage = value.toString();

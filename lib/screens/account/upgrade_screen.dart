@@ -1,9 +1,9 @@
 import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
 import 'package:your_chat_starter/main.dart';
-import 'package:your_chat_starter/screens/payment_screen.dart';
+import 'package:your_chat_starter/screens/account/payment_screen.dart';
 
-import '../constants.dart';
+import '../../constants.dart';
 
 class UpgradeActivity extends StatefulWidget {
   @override

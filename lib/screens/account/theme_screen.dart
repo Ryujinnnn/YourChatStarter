@@ -14,7 +14,7 @@ class ThemeScreen extends StatefulWidget {
   _ThemeScreenState createState() => _ThemeScreenState();
 }
 
-enum ThemeGroup { green, sunshine, cherry, tropical }
+enum ThemeGroup { green, sunshine, cherry, ocean }
 
 class _ThemeScreenState extends State<ThemeScreen> {
   ThemeGroup? _themeGroup;
@@ -38,7 +38,7 @@ class _ThemeScreenState extends State<ThemeScreen> {
     switch (savedTheme) {
       case ThemeGroup.green:
         kPrimaryColor = const Color(0xFF00BF6D);
-        kSecondaryColor = Color.fromARGB(223, 0, 114, 0);
+        kSecondaryColor = const Color.fromARGB(223, 0, 114, 0);
         break;
       case ThemeGroup.cherry:
         kPrimaryColor = const Color(0xFFC6246D);
@@ -48,14 +48,14 @@ class _ThemeScreenState extends State<ThemeScreen> {
         kPrimaryColor = Colors.amber;
         kSecondaryColor = const Color(0xFFFE9901);
         break;
-      case ThemeGroup.tropical:
-        kPrimaryColor = const Color(0xFF00BF6D);
-        kSecondaryColor = const Color(0xFFFE9901);
+      case ThemeGroup.ocean:
+        kPrimaryColor = const Color.fromARGB(255, 45, 175, 250);
+        kSecondaryColor = const Color.fromARGB(255, 1, 102, 254);
         break;
       default:
         {
           kPrimaryColor = const Color(0xFF00BF6D);
-          kSecondaryColor = Color.fromARGB(223, 0, 114, 0);
+          kSecondaryColor = const Color.fromARGB(223, 0, 114, 0);
         }
         break;
     }
@@ -174,23 +174,23 @@ class _ThemeScreenState extends State<ThemeScreen> {
             title: Row(
               children: [
                 Container(
-                    height: 20, width: 10, color: const Color(0xFF00BF6D)),
-                Container(
-                    height: 20, width: 10, color: const Color(0xFFFE9901)),
+                    height: 20,
+                    width: 20,
+                    color: const Color.fromARGB(255, 45, 175, 250)),
                 const SizedBox(
                   width: 10,
                 ),
-                const Text('Rừng nhiệt đới'),
+                const Text('Đại dương'),
               ],
             ),
             leading: Radio<ThemeGroup>(
-              value: ThemeGroup.tropical,
+              value: ThemeGroup.ocean,
               groupValue: _themeGroup,
               onChanged: (ThemeGroup? value) {
                 setState(() {
                   _themeGroup = value;
-                  kPrimaryColor = const Color(0xFF00BF6D);
-                  kSecondaryColor = const Color(0xFFFE9901);
+                  kPrimaryColor = const Color.fromARGB(255, 45, 175, 250);
+                  kSecondaryColor = const Color.fromARGB(255, 1, 102, 254);
                 });
               },
             ),

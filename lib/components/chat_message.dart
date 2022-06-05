@@ -73,9 +73,9 @@ class ChatMessageState extends State<ChatMessage>
                                 data: md.markdownToHtml(message.response),
                                 style: {
                                   "body": Style(
-                                    fontSize: FontSize(fontSize),
-                                    fontWeight: FontWeight.normal,
-                                  ),
+                                      fontSize: FontSize(fontSize),
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.white),
                                 },
                                 onLinkTap: (url, _, __, ___) {
                                   Navigator.push(
