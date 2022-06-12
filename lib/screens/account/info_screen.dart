@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -58,41 +59,41 @@ class _InfoScreenState extends State<InfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          backgroundColor: Color(0xFF1D1D35),
-          appBar: AppBar(
-            brightness: Brightness.dark,
-            automaticallyImplyLeading: false,
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: <Color>[kPrimaryColor, kSecondaryColor],
-                ),
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top]);
+    return Scaffold(
+        backgroundColor: Color(0xFF1D1D35),
+        appBar: AppBar(
+          brightness: Brightness.dark,
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: <Color>[kPrimaryColor, kSecondaryColor],
               ),
             ),
-            title: Container(
-              child: Text("Thông tin khách hàng"),
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
           ),
-          body: circular
-              ? Center(child: CircularProgressIndicator())
-              : ProgressHUD(
-                  key: UniqueKey(),
-                  child: Form(
-                    key: globalFormKey,
-                    child: _profileUI(context),
-                  ),
-                  inAsyncCall: isAPIcallProcess)),
-    );
+          title: Container(
+            child: Text("Thông tin khách hàng"),
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: circular
+            ? Center(child: CircularProgressIndicator())
+            : ProgressHUD(
+                key: UniqueKey(),
+                child: Form(
+                  key: globalFormKey,
+                  child: _profileUI(context),
+                ),
+                inAsyncCall: isAPIcallProcess));
   }
 
   Widget _profileUI(BuildContext context) {

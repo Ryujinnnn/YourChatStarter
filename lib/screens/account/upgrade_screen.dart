@@ -1,5 +1,6 @@
 import 'package:accordion/accordion.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:your_chat_starter/main.dart';
 import 'package:your_chat_starter/screens/account/payment_screen.dart';
 
@@ -16,6 +17,8 @@ class _UpgradeActivityState extends State<UpgradeActivity> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

@@ -133,8 +133,9 @@ class LoginScreenState extends State<LoginScreen> {
                           showDialog(
                             context: context,
                             builder: (_) => AlertDialog(
-                              title: const Text("ERROR!!!"),
-                              content: const Text("Wrong email or password"),
+                              title: const Text("Đăng nhập thất bại"),
+                              content: const Text(
+                                  "Tài khoản hoặc mật khẩu không chính xác"),
                               actions: <Widget>[
                                 FlatButton(
                                   child: Text(

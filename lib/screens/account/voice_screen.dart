@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import 'package:text_to_speech/text_to_speech.dart';
@@ -20,10 +21,10 @@ class VoiceScreen extends StatefulWidget {
 }
 
 bool t2svalue = false;
-bool s2tvalue = false;
+bool s2tvalue = true;
 bool notivalue = false;
 double valueRate = 1.0;
-String selectedItemLanguage = "";
+String selectedItemLanguage = "Giọng nói mặc định";
 
 class _VoiceScreenState extends State<VoiceScreen> {
   bool circular = true;
@@ -31,84 +32,82 @@ class _VoiceScreenState extends State<VoiceScreen> {
   String? _externalUserId;
   TextToSpeech _textToSpeech = TextToSpeech();
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
-  List<String> itemLanguages = [""];
-  String defaultItemLanguage = "";
+  List<String> itemLanguages = ["Giọng nói mặc định"];
+  String defaultItemLanguage = "Giọng nói mặc định";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getListLanguage();
-    getDefaultLanguage();
     fetchData();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: AppBar(
-            brightness: Brightness.dark,
-            automaticallyImplyLeading: false,
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: <Color>[kPrimaryColor, kSecondaryColor],
-                ),
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
+    return Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        appBar: AppBar(
+          brightness: Brightness.dark,
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: <Color>[kPrimaryColor, kSecondaryColor],
               ),
             ),
-            title: Container(
-              child: Text(
-                "Âm thanh và thông báo",
-                style: TextStyle(color: Colors.white),
-              ),
+          ),
+          title: Container(
+            child: Text(
+              "Âm thanh và thông báo",
+              style: TextStyle(color: Colors.white),
             ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            actions: [
-              IconButton(
-                  onPressed: () async {
-                    //await applyChanges();
-                    setState(() {
-                      isAPIcallProcess = true;
-                    });
-                    await APIService.saveSetting(SettingRequestModel(
-                        allowAutoT2s: t2svalue,
-                        allowPushNotification: notivalue,
-                        allowVoiceRecording: s2tvalue,
-                        voiceRate: valueRate));
-                    setState(() {
-                      isAPIcallProcess = false;
-                      saveLocalData();
-                      saveVocal();
-                    });
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  //await applyChanges();
+                  setState(() {
+                    isAPIcallProcess = true;
+                  });
+                  await APIService.saveSetting(SettingRequestModel(
+                      allowAutoT2s: t2svalue,
+                      allowPushNotification: notivalue,
+                      allowVoiceRecording: s2tvalue,
+                      voiceRate: valueRate));
+                  setState(() {
+                    isAPIcallProcess = false;
                     saveLocalData();
                     saveVocal();
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                            builder: (context) => const ChatBotScreen()),
-                        (Route<dynamic> route) => false);
-                  },
-                  icon: Icon(Icons.check))
-            ],
+                  });
+                  saveLocalData();
+                  saveVocal();
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => const ChatBotScreen()),
+                      (Route<dynamic> route) => false);
+                },
+                icon: Icon(Icons.check))
+          ],
+        ),
+        body: ProgressHUD(
+          child: Form(
+            key: globalFormKey,
+            child: _settingUI(context),
           ),
-          body: ProgressHUD(
-            child: Form(
-              key: globalFormKey,
-              child: _settingUI(context),
-            ),
-            inAsyncCall: isAPIcallProcess,
-            key: UniqueKey(),
-            opacity: 0.3,
-          )),
-    );
+          inAsyncCall: isAPIcallProcess,
+          key: UniqueKey(),
+          opacity: 0.3,
+        ));
   }
 
   Widget _settingUI(BuildContext context) {
@@ -260,7 +259,7 @@ class _VoiceScreenState extends State<VoiceScreen> {
                               );
                             }).toList();
                           },
-                          //isExpanded: true,
+                          isExpanded: true,
                           items: itemLanguages
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
@@ -268,7 +267,6 @@ class _VoiceScreenState extends State<VoiceScreen> {
                               child: Text(value),
                             );
                           }).toList(),
-                          isExpanded: true,
                           onChanged: (value) {
                             setState(() {
                               selectedItemLanguage = value.toString();
@@ -289,19 +287,24 @@ class _VoiceScreenState extends State<VoiceScreen> {
         style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.8)),
       ));
   void getListLanguage() async {
-    var language = await _textToSpeech.getLanguages();
-    itemLanguages = language;
+    var language_a = await _textToSpeech.getLanguages();
+    List<String> language_arr = [];
+    language_a.asMap().forEach(
+        (index, value) => {language_arr.add(index.toString() + "_" + value)});
+
+    itemLanguages.addAll(language_arr);
   }
 
   void getDefaultLanguage() async {
-    var language = await _textToSpeech.getLanguages();
-    var index = language.indexWhere((val) => val == "vi-VN");
+    //var language = await _textToSpeech.getLanguages();
+    var index = itemLanguages.indexWhere((val) => val.split("_")[1] == "vi-VN");
+
     if (index == -1) {
-      //pop up warning no vietnamese speech reg
+      defaultItemLanguage = itemLanguages[0];
       return;
     }
     //get vietnamese language code
-    defaultItemLanguage = language[index];
+    defaultItemLanguage = itemLanguages[index];
   }
 
   void saveLocalData() async {
@@ -316,14 +319,13 @@ class _VoiceScreenState extends State<VoiceScreen> {
   void saveVocal() async {
     final prefs = await SharedPreferences.getInstance();
     (selectedItemLanguage != "") ? selectedItemLanguage : defaultItemLanguage;
-    print(selectedItemLanguage);
     await prefs.setString('selectedLanguage', selectedItemLanguage);
   }
 
   void loadVocal() async {
     final prefs = await SharedPreferences.getInstance();
-    print(prefs.getString('selectedLanguage'));
-    if (prefs.getString('selectedLanguage') != defaultItemLanguage) {
+    if (prefs.getString('selectedLanguage') != defaultItemLanguage &&
+        prefs.getString('selectedLanguage') != null) {
       selectedItemLanguage = prefs.getString('selectedLanguage').toString();
     } else {
       selectedItemLanguage = defaultItemLanguage;
@@ -339,6 +341,15 @@ class _VoiceScreenState extends State<VoiceScreen> {
   }
 
   void fetchData() async {
+    getListLanguage();
+    getDefaultLanguage();
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('selectedLanguage') != defaultItemLanguage &&
+        prefs.getString('selectedLanguage') != null) {
+      selectedItemLanguage = prefs.getString('selectedLanguage').toString();
+    } else {
+      selectedItemLanguage = defaultItemLanguage;
+    }
     var model = await APIService.getSetting();
     if (model.status == "failed") {
       setState(() {

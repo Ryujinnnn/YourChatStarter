@@ -13,7 +13,6 @@ class BlogScreen extends StatefulWidget {
 class _BlogScreenState extends State<BlogScreen> {
   List<BlogWidget> blogData = [];
   bool circular = true;
-  final double appBarHeight = AppBar().preferredSize.height;
   @override
   void initState() {
     // TODO: implement initState

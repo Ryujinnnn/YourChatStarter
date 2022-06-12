@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:your_chat_starter/components/custom_page_route.dart';
 import 'package:your_chat_starter/components/primary_button.dart';
 import 'package:your_chat_starter/constants.dart';
@@ -9,6 +10,10 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
     return Scaffold(
       body: SafeArea(
         child: Padding(

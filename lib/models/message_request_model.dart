@@ -33,8 +33,12 @@ class Context {
     "Hôm nay là thứ mấy"
   ];
   Context.fromJson(Map<String, dynamic> json) {
-    if ((json['suggestion_list'] as List).last != null) {
-      suggestionList = json['suggestion_list'].cast<String>();
+    if ((json['suggestion_list'] != [])) {
+      if ((json['suggestion_list'] as List).last != null) {
+        suggestionList = json['suggestion_list'].cast<String>();
+      } else {
+        suggestionList = defaultSuggestions;
+      }
     } else {
       suggestionList = defaultSuggestions;
     }

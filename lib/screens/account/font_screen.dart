@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:snippet_coder_utils/ProgressHUD.dart';
 import 'package:text_to_speech/text_to_speech.dart';
@@ -36,8 +37,9 @@ class _FontScreenState extends State<FontScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
+    return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         brightness: Brightness.dark,
@@ -83,7 +85,7 @@ class _FontScreenState extends State<FontScreen> {
         key: globalFormKey,
         child: _settingUI(context),
       ),
-    ));
+    );
   }
 
   Widget _settingUI(BuildContext context) {
@@ -217,7 +219,11 @@ class _FontScreenState extends State<FontScreen> {
 
   void loadLocalData() async {
     final prefs = await SharedPreferences.getInstance();
-    fontSize = prefs.getDouble('fontSize')!;
+    if (prefs.getDouble('fontSize') != null) {
+      fontSize = prefs.getDouble('fontSize')!;
+    } else {
+      fontSize = 15;
+    }
   }
 
   void fetchData() async {

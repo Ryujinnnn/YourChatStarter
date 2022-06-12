@@ -2,6 +2,7 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:your_chat_starter/components/image_dialog.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -20,17 +21,33 @@ class ChatMessage extends StatefulWidget {
   ChatMessageState createState() => ChatMessageState(this.message);
 }
 
+void loadFontData() async {
+  final prefs = await SharedPreferences.getInstance();
+  if (prefs.getDouble('fontSize') != null) {
+    fontSize = prefs.getDouble('fontSize')!;
+  } else {
+    fontSize = 15;
+  }
+}
+
 class ChatMessageState extends State<ChatMessage>
     with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
-      duration: const Duration(milliseconds: 1000), vsync: this)
+      duration: const Duration(milliseconds: 500), vsync: this)
     ..forward();
   late final Animation<double> _animation = CurvedAnimation(
     parent: _controller,
-    curve: Curves.bounceOut,
+    curve: Curves.easeOutBack,
   );
   final MessageValueHolder message;
   ChatMessageState(this.message);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    loadFontData();
+  }
 
   @override
   Widget build(BuildContext context) {

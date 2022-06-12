@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:your_chat_starter/models/login_request.dart';
@@ -21,6 +23,9 @@ late Color kSecondaryColor;
 Color kBackgroundColor = Colors.black;
 
 Future<void> main() async {
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: SystemUiOverlay.values);
+
   WidgetsFlutterBinding.ensureInitialized();
   bool isLoggedIn = await SharedService.isLoggedIn();
   if (isLoggedIn) {

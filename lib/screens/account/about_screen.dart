@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:your_chat_starter/screens/account/font_screen.dart';
 import 'package:your_chat_starter/screens/account/info_screen.dart';
@@ -39,6 +40,8 @@ class _AboutScreenState extends State<AboutScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     return Scaffold(
         appBar: AppBar(
           brightness: Brightness.dark,
@@ -88,6 +91,9 @@ class _AboutScreenState extends State<AboutScreen> {
                       ),
                     ),
                     SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                    ),
+                    SizedBox(
                       height: 100,
                       width: 100,
                       child: RawMaterialButton(
@@ -124,7 +130,9 @@ class _AboutScreenState extends State<AboutScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 50),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.15,
+                    ),
                     SizedBox(
                       height: 100,
                       width: 100,

@@ -51,7 +51,7 @@ class ChatBotScreenState extends State<ChatBotScreen> {
   TextToSpeech _textToSpeech = TextToSpeech();
   double volume = 1;
   double rate = valueRate;
-  bool speechEnabled = false;
+  bool speechEnabled = true;
   bool haveMap = false;
   late String location;
 
@@ -128,7 +128,8 @@ class ChatBotScreenState extends State<ChatBotScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //FIXME: Scroll sai
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     WidgetsBinding.instance?.addPostFrameCallback((_) => {
           Timer(Duration(milliseconds: 200), () {
             _scrollController.animateTo(
@@ -176,7 +177,9 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                       color:
                           Theme.of(context).backgroundColor.withOpacity(0.2)),
                   child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxHeight: 50),
+                      constraints: BoxConstraints(
+                          maxHeight:
+                              MediaQuery.of(context).size.height * 0.075),
                       child: Center(
                         child: ListView.builder(
                             shrinkWrap: true,
@@ -212,6 +215,7 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                 size: 35,
               ),
               onPressed: () {
+                print("Đã bấm");
                 if (s2tvalue == true) {
                   _speechToText.isNotListening
                       ? _startListening()
@@ -223,7 +227,7 @@ class ChatBotScreenState extends State<ChatBotScreen> {
           ),
           Expanded(
             child: Container(
-              height: 45,
+              height: MediaQuery.of(context).size.height * 0.06,
               decoration: BoxDecoration(
                   color: kPrimaryColor.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(10)),
@@ -386,9 +390,18 @@ class ChatBotScreenState extends State<ChatBotScreen> {
     );
   }
 
+  void loadVoiceSetting() async {
+    final prefs = await SharedPreferences.getInstance();
+    s2tvalue = prefs.getBool('s2tvalue')!;
+    t2svalue = prefs.getBool('t2svalue')!;
+    notivalue = prefs.getBool('notivalue')!;
+    valueRate = prefs.getDouble('valueRate')!;
+  }
+
   void fetchData() async {
     setState(() {
       rate = valueRate;
+      loadVoiceSetting();
       loadVocal();
     });
   }

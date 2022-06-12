@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:your_chat_starter/main.dart';
+import 'package:your_chat_starter/models/register_respond.dart';
 import 'package:your_chat_starter/models/subscribe_push_request.dart';
 import 'package:your_chat_starter/services/shared_service.dart';
 
@@ -70,19 +71,19 @@ class APIService {
     return false;
   }
 
-  static Future<bool> register(RegisterRequestModel model) async {
+  static Future<RegisterRespondModel> register(
+      RegisterRequestModel model) async {
     var url = Uri.parse(Config.apiURL + Config.registerAPI);
     var response = await client.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(model.toJson()));
+        body: jsonEncode(model));
     // ignore: unnecessary_null_comparison
-    if (response.body != null) {
-      return true;
-    }
-    return false;
-    //return registerRespondModel(response.body);
+    var body = json.decode(response.body);
+    RegisterRespondModel registerRespondModel =
+        RegisterRespondModel(status: body['status'], desc: body['desc']);
+    return registerRespondModel;
   }
 
   static Future<MessageRespondModel> sendMessage(

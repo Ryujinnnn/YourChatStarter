@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:your_chat_starter/screens/account/about_screen.dart';
 import 'package:your_chat_starter/screens/account/font_screen.dart';
 import 'package:your_chat_starter/screens/account/info_screen.dart';
@@ -53,6 +54,8 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     return Scaffold(
         appBar: AppBar(
           brightness: Brightness.dark,
@@ -98,12 +101,14 @@ class _AccountScreenState extends State<AccountScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 50,
-                      width: 50,
+                    SizedBox(
+                      height: 60,
+                      width: 60,
                       child: CircleAvatar(
                         backgroundImage:
                             AssetImage("assets/images/logo-mini.png"),
+                        backgroundColor:
+                            Theme.of(context).scaffoldBackgroundColor,
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -327,11 +332,11 @@ class _AccountScreenState extends State<AccountScreen> {
                       const SizedBox(height: 20),
                       GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(CustomPageRoute(
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) =>
-                                        PasswordScreen(),
-                                direction: AxisDirection.up));
+                            SharedService.logout(context);
+                            Navigator.of(context).push(MaterialPageRoute<bool>(
+                                builder: (BuildContext context) {
+                              return const ChatBotScreen();
+                            }));
                           },
                           child: Row(
                             children: [

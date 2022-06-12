@@ -19,10 +19,10 @@ class RegisterRequestModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['username'] = username;
-    data['password'] = password;
-    data['confirm_password'] = confirmPassword;
-    data['email'] = email;
+    if (username != "") data['username'] = username;
+    if (password != "") data['password'] = password;
+    if (confirmPassword != "") data['confirm_password'] = confirmPassword;
+    if (email != "") data['email'] = email;
     return data;
   }
 }

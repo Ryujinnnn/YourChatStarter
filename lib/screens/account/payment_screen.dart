@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:your_chat_starter/main.dart';
 
 import '../../constants.dart';
@@ -31,6 +32,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   _PaymentScreenState(this.planName, this.amount, this.nameService);
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

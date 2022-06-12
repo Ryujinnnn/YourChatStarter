@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:image_picker/image_picker.dart';
@@ -42,6 +43,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   late FToast fToast;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -53,41 +55,41 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          backgroundColor: Color(0xFF1D1D35),
-          appBar: AppBar(
-            brightness: Brightness.dark,
-            automaticallyImplyLeading: false,
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: <Color>[kPrimaryColor, kSecondaryColor],
-                ),
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
+    return Scaffold(
+        backgroundColor: Color(0xFF1D1D35),
+        appBar: AppBar(
+          brightness: Brightness.dark,
+          automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: <Color>[kPrimaryColor, kSecondaryColor],
               ),
             ),
-            title: Container(
-              child: Text("Thiết lập bảo mật"),
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
           ),
-          body: circular
-              ? Center(child: CircularProgressIndicator())
-              : ProgressHUD(
-                  key: UniqueKey(),
-                  child: Form(
-                    key: globalFormKey,
-                    child: _profileUI(context),
-                  ),
-                  inAsyncCall: isAPIcallProcess)),
-    );
+          title: Container(
+            child: Text("Thiết lập bảo mật"),
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        body: circular
+            ? Center(child: CircularProgressIndicator())
+            : ProgressHUD(
+                key: UniqueKey(),
+                child: Form(
+                  key: globalFormKey,
+                  child: _profileUI(context),
+                ),
+                inAsyncCall: isAPIcallProcess));
   }
 
   Widget _profileUI(BuildContext context) {
@@ -151,6 +153,9 @@ class _PasswordScreenState extends State<PasswordScreen> {
                               )),
                         ),
                       ),
+                      const SizedBox(
+                        height: 10,
+                      )
                     ],
                   ),
                 ),

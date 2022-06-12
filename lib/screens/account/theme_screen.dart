@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:your_chat_starter/constants.dart';
 import 'package:your_chat_starter/theme.dart';
@@ -63,6 +64,8 @@ class _ThemeScreenState extends State<ThemeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top]);
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -73,7 +76,7 @@ class _ThemeScreenState extends State<ThemeScreen> {
                     Navigator.of(context).pop()
                   }),
           brightness: Brightness.dark,
-          backgroundColor: kBackgroundColor,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           automaticallyImplyLeading: false,
           title: const Text("Giao diện"),
           flexibleSpace: Container(
