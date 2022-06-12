@@ -99,9 +99,8 @@ class ChatBotScreenState extends State<ChatBotScreen> {
     AppOpening(appName: "dialer", packageName: "com.google.android.dialer"),
     AppOpening(
         appName: "messaging", packageName: "com.google.android.apps.messaging"),
-    AppOpening(
-        appName: "camera", packageName: "com.google.android.GoogleCamera"),
-    AppOpening(appName: "clock", packageName: "com.google.android.deskclock")
+    AppOpening(appName: "camera", packageName: "com.android.camera"),
+    AppOpening(appName: "clock", packageName: "com.android.deskclock")
   ];
   String languageCode = "";
   MessageRespondModel preRespond = MessageRespondModel(response: "temp");
