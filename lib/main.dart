@@ -97,7 +97,7 @@ class MyApp extends StatelessWidget {
     loadThemeData();
     theming();
     return MaterialApp(
-      title: 'Your Chat Starter',
+      title: 'YourChatStarter',
       debugShowCheckedModeBanner: false,
       theme: lightThemeData(context),
       darkTheme: darkThemeData(context),

@@ -20,7 +20,7 @@
         </intent>
     </queries>
    <application
-        android:label="Your Chat Starter"
+        android:label="YourChatStarter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

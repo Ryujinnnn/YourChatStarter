@@ -21,6 +21,7 @@ import 'package:text_to_speech/text_to_speech.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:your_chat_starter/components/chat_message.dart';
 import 'package:your_chat_starter/components/custom_page_route.dart';
+import 'package:your_chat_starter/components/map_widget.dart';
 import 'package:your_chat_starter/components/web_view.dart';
 import 'package:your_chat_starter/constants.dart';
 import 'package:your_chat_starter/models/app_opening.dart';
@@ -48,14 +49,16 @@ class ChatBotScreen extends StatefulWidget {
 
 class ChatBotScreenState extends State<ChatBotScreen> {
   SpeechToText _speechToText = SpeechToText();
+  static bool showMap = false;
+  static late double longitude, latitude;
   TextToSpeech _textToSpeech = TextToSpeech();
   double volume = 1;
   double rate = valueRate;
   bool speechEnabled = true;
-  bool haveMap = false;
   late String location;
 
   final TextEditingController messController = TextEditingController();
+
   List<ChatMessage> messages = [];
 
   List<String?> suggestions = [
@@ -163,12 +166,27 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                         reverse: false,
                         itemCount: messages.length,
                         itemBuilder: ((context, index) {
-                          return ChatMessage(message: messages[index].message);
+                          return ChatMessage(
+                              message: messages[index].message,
+                              map: (bool isShow, String location) {
+                                location = location.replaceAll("openMap", "");
+                                List sLocation = location.split(' ');
+                                setState(() {
+                                  if (showMap == false) {
+                                    showMap = isShow;
+                                    latitude = double.parse(sLocation[0]);
+                                    longitude = double.parse(sLocation[1]);
+                                  } else {
+                                    latitude = double.parse(sLocation[0]);
+                                    longitude = double.parse(sLocation[1]);
+                                  }
+                                });
+                              });
                         })))
               ],
             )),
           ),
-          haveMap ? mapWidget(location) : Container(),
+          showMap ? mapWidget(latitude, longitude) : Container(),
           suggestions.isNotEmpty
               ? Container(
                   width: MediaQuery.of(context).size.width,
@@ -259,7 +277,8 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                       message: MessageValueHolder(
                           response: messController.text,
                           context: {},
-                          isBot: false));
+                          isBot: false),
+                      map: (bool isShow, String location) {});
                   setState(() {
                     messages.add(mess);
                   });
@@ -276,7 +295,8 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                               RegExp(r'\[https.*\]', caseSensitive: false),
                               (match) => ""),
                           context: respond.contextString,
-                          isBot: true));
+                          isBot: true),
+                      map: (bool isShow, String location) {});
 
                   if (respond.action.action == "REQUEST_OPENAPP") {
                     String appName = respond.action.data.message
@@ -302,19 +322,26 @@ class ChatBotScreenState extends State<ChatBotScreen> {
                             .replaceAllMapped(RegExp(r'\"'), (match) => ""),
                         respond.action.data.time);
                   }
+
                   if (respond.action.action == "SHOW_MAP") {
-                    haveMap = true;
-                    location = respond.action.data.message;
-                  } else {
-                    haveMap = false;
-                    location = "";
+                    var location = "openMap" + respond.action.data.message;
+                    var parsedLocation = Uri.encodeFull(location);
+                    res.message.response = res.message.response +
+                        " - [Xem bản đồ](${parsedLocation})";
                   }
+
                   setState(() {
                     messages.add(res);
                     preRespond = respond;
                     suggestions = respond.context.suggestionList;
                     contextString = respond.contextString;
+                    if (showMap == true) {
+                      setState(() {
+                        showMap = false;
+                      });
+                    }
                   });
+
                   if (t2svalue == true) {
                     speak(res.message.response);
                   }
@@ -331,28 +358,6 @@ class ChatBotScreenState extends State<ChatBotScreen> {
               ))
         ],
       )),
-    );
-  }
-
-  Container mapWidget(String location) {
-    List slocation = location.split(' ');
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 200,
-      child: FlutterMap(
-        options: MapOptions(
-          center:
-              LatLng(double.parse(slocation[0]), double.parse(slocation[1])),
-          zoom: 13.0,
-        ),
-        children: <Widget>[
-          TileLayerWidget(
-              options: TileLayerOptions(
-                  urlTemplate:
-                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                  subdomains: ['a', 'b', 'c'])),
-        ],
-      ),
     );
   }
 
@@ -502,6 +507,18 @@ class ChatBotScreenState extends State<ChatBotScreen> {
     setState(() {
       messController.text = result.recognizedWords;
     });
+  }
+
+  MapWidget mapWidget(double latitude, longitude) {
+    return MapWidget(
+      onCloseButtonClick: (bool isShow) {
+        setState(() {
+          showMap = isShow;
+        });
+      },
+      latitude: latitude,
+      longitude: longitude,
+    );
   }
 
   FutureOr onGoBack(dynamic value) {

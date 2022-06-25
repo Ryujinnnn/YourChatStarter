@@ -195,10 +195,13 @@ class _FontScreenState extends State<FontScreen> {
                     ),
                     ChatMessage(
                         message: MessageValueHolder(
-                            response: "Xin chào", context: {}, isBot: true)),
+                            response: "Xin chào", context: {}, isBot: true),
+                        map: (bool isShow, String location) {}),
                     ChatMessage(
-                        message: MessageValueHolder(
-                            response: "Chào bạn", context: {}, isBot: false))
+                      message: MessageValueHolder(
+                          response: "Chào bạn", context: {}, isBot: false),
+                      map: (bool isShow, String location) {},
+                    )
                   ],
                 )),
           );

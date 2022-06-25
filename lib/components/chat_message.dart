@@ -2,6 +2,8 @@ import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:your_chat_starter/components/image_dialog.dart';
@@ -11,14 +13,17 @@ import 'package:your_chat_starter/main.dart';
 import 'package:your_chat_starter/models/message_value.dart';
 
 import '../screens/account/font_screen.dart';
+import '../screens/chatbot_screen.dart';
 import 'custom_page_route.dart';
 
 class ChatMessage extends StatefulWidget {
-  final MessageValueHolder message;
-  const ChatMessage({Key? key, required this.message}) : super(key: key);
+  MessageValueHolder message;
+  MapCallBack map;
+  ChatMessage({Key? key, required this.message, required this.map})
+      : super(key: key);
 
   @override
-  ChatMessageState createState() => ChatMessageState(this.message);
+  ChatMessageState createState() => ChatMessageState(this.message, this.map);
 }
 
 void loadFontData() async {
@@ -30,6 +35,8 @@ void loadFontData() async {
   }
 }
 
+typedef MapCallBack = void Function(bool isShowed, String location);
+
 class ChatMessageState extends State<ChatMessage>
     with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
@@ -40,7 +47,8 @@ class ChatMessageState extends State<ChatMessage>
     curve: Curves.easeOutBack,
   );
   final MessageValueHolder message;
-  ChatMessageState(this.message);
+  final MapCallBack map;
+  ChatMessageState(this.message, this.map);
 
   @override
   void initState() {
@@ -93,15 +101,25 @@ class ChatMessageState extends State<ChatMessage>
                                       fontSize: FontSize(fontSize),
                                       fontWeight: FontWeight.normal,
                                       color: Colors.white),
+                                  "a": Style(
+                                      fontSize: FontSize(fontSize),
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white)
                                 },
                                 onLinkTap: (url, _, __, ___) {
-                                  Navigator.push(
-                                      context,
-                                      CustomPageRoute(
-                                          pageBuilder: (context, animation,
-                                                  secondaryAnimation) =>
-                                              webView(url.toString()),
-                                          direction: AxisDirection.up));
+                                  if (url!.startsWith("openMap"))
+                                    setState(() {
+                                      map(true, Uri.decodeFull(url));
+                                    });
+                                  else {
+                                    Navigator.push(
+                                        context,
+                                        CustomPageRoute(
+                                            pageBuilder: (context, animation,
+                                                    secondaryAnimation) =>
+                                                webView(url.toString()),
+                                            direction: AxisDirection.up));
+                                  }
                                 },
                                 onImageTap: (src, _, __, ___) {
                                   showDialog(
