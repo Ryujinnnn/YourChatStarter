@@ -15,7 +15,7 @@ import 'package:your_chat_starter/screens/chatbot_screen.dart';
 import '../../components/custom_page_route.dart';
 import '../../constants.dart';
 import '../../main.dart';
-import '../../models/change_password.dart';
+import '../../models/change_password_request.dart';
 import '../../models/edit_request.dart';
 import '../../models/profile_respond.dart';
 import '../../services/api_service.dart';
@@ -31,11 +31,8 @@ class _PasswordScreenState extends State<PasswordScreen> {
   //UserRespondModel user;
   late ProfileRespondModel profile;
   bool circular = true;
-  DateTime _selectedDate =
-      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-
+  String failureText = "";
   late File file;
-  ImagePicker imagePicker = ImagePicker();
   bool isAPIcallProcess = false;
   GlobalKey<FormState> globalFormKey = GlobalKey<FormState>();
 
@@ -132,16 +129,64 @@ class _PasswordScreenState extends State<PasswordScreen> {
                               isAPIcallProcess = true;
                             });
                             await APIService.changePassword(
-                                ChangePasswordRequestModel(
-                                    oldPassword: oldPasswordController.text,
-                                    newPassword: newPasswordController.text,
-                                    confirmNewPassword:
-                                        confirmPasswordController.text));
-                            setState(() {
-                              isAPIcallProcess = false;
-                            });
-                            _showToast("Thay đổi mật khẩu thành công");
-                            Navigator.of(context).pop();
+                                    ChangePasswordRequestModel(
+                                        oldPassword: oldPasswordController.text,
+                                        newPassword: newPasswordController.text,
+                                        confirmNewPassword:
+                                            confirmPasswordController.text))
+                                .then((response) => {
+                                      setState(() {
+                                        isAPIcallProcess = false;
+                                        switch (response.desc) {
+                                          case "missing required field":
+                                            failureText =
+                                                "Chưa nhập đủ các trường";
+                                            break;
+                                          case "old password is incorrect":
+                                            failureText =
+                                                "Mật khẩu cũ không chính xác";
+                                            break;
+                                          case "new password and confirm password does not match":
+                                            failureText =
+                                                "Xác nhận mật khẩu không trùng khớp";
+                                            break;
+                                          default:
+                                            {
+                                              failureText = response.desc;
+                                            }
+                                            break;
+                                        }
+                                      }),
+                                      if (response.status == 'success')
+                                        {
+                                          _showToast(
+                                              "Thay đổi mật khẩu thành công"),
+                                          Navigator.of(context).pop()
+                                        }
+                                      else
+                                        {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) => AlertDialog(
+                                              title: const Text(
+                                                  "Thay đổi mật khẩu thất bại"),
+                                              content: Text(failureText),
+                                              actions: <Widget>[
+                                                FlatButton(
+                                                  child: Text(
+                                                    "OK",
+                                                    style: TextStyle(
+                                                        color: kPrimaryColor),
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        }
+                                    });
                           },
                           child: Text("Lưu mật khẩu"),
                           style: ElevatedButton.styleFrom(

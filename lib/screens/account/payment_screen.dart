@@ -4,32 +4,62 @@ import 'package:flutter/services.dart';
 import 'package:your_chat_starter/main.dart';
 
 import '../../constants.dart';
+import '../../models/profile_respond.dart';
+import '../../services/api_service.dart';
+import '../chatbot_screen.dart';
 
 class PaymentScreen extends StatefulWidget {
   final String planName;
   final int amount;
   final String nameService;
+  final String paymentQR;
 
   const PaymentScreen(
       {Key? key,
       required this.planName,
       required this.amount,
-      required this.nameService})
+      required this.nameService,
+      required this.paymentQR})
       : super(key: key);
   @override
-  _PaymentScreenState createState() =>
-      _PaymentScreenState(this.planName, this.amount, this.nameService);
+  _PaymentScreenState createState() => _PaymentScreenState(
+      this.planName, this.amount, this.nameService, this.paymentQR);
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
   final String planName;
   final int amount;
   final String nameService;
+  final String paymentQR;
   TextEditingController nameController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  _PaymentScreenState(this.planName, this.amount, this.nameService);
+  _PaymentScreenState(
+      this.planName, this.amount, this.nameService, this.paymentQR);
+
+  late ProfileRespondModel profile;
+  String username = "";
+  bool circular = true;
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchData();
+  }
+
+  void fetchData() async {
+    if (isLogin = true) {
+      var response = await APIService.getProfile();
+      setState(() {
+        profile = response;
+        if (profile.user != null) {
+          username = response.user.username;
+        }
+        circular = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
@@ -55,13 +85,106 @@ class _PaymentScreenState extends State<PaymentScreen> {
         title: Text("Thanh toán"),
       ),
       body: Container(
-        decoration: BoxDecoration(color: Color(0xFF1D1D35)),
         child: SingleChildScrollView(
             child: Container(
-          margin: EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 10),
+          margin: EdgeInsets.only(left: 10, right: 10, top: 20, bottom: 10),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                    border: Border.all(color: kPrimaryColor),
+                    color: Colors.white),
+                child: Container(
+                  margin: EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Thanh toán chuyển khoản ngân hàng",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: kContentColorLightTheme),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Chuyển khoản trực tiếp tới số tài khoản dưới đây:",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.normal,
+                            color: kContentColorLightTheme),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Nguyễn Ngọc Đăng \n 5331 0000 921 488",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: kPrimaryColor),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Ngân hàng TMCP & PT Việt Nam (BIDV)",
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.normal,
+                            color: kContentColorLightTheme),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Divider(
+                        height: 1.5,
+                        color: Colors.black,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Số tiền chuyển khoản:",
+                        style: TextStyle(
+                            fontSize: 16, color: kContentColorLightTheme),
+                      ),
+                      Text(
+                        amount.toString() + " đ",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: kContentColorLightTheme),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Nội dung chuyển khoản:",
+                        style: TextStyle(
+                            fontSize: 16, color: kContentColorLightTheme),
+                      ),
+                      Text(
+                        "$username - YourChatStarter",
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: kContentColorLightTheme),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.05,
+              ),
               Container(
                 padding:
                     EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
@@ -72,179 +195,47 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 ),
                 child: Column(
                   children: [
-                    Text(
-                      "Thông tin thanh toán",
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: kContentColorLightTheme),
-                    ),
+                    Text("Thanh toán qua ví điện tử MoMo",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: kContentColorLightTheme)),
                     SizedBox(
                       height: 10,
                     ),
-                    buildEnableFocusTextField(
-                        "Họ tên", "Nhập họ tên", nameController),
-                    buildEnableFocusTextField(
-                        "Địa chỉ", "Nhập địa chỉ", addressController),
-                    buildNumberTextField("Số điện thoại", "Nhập số điện thoại",
-                        phoneNumberController),
-                    buildEnableFocusTextField(
-                        "Email", "Nhập email", emailController),
+                    Text(
+                      "Vui lòng quét mã QR dưới đây với lời nhắn:",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal,
+                          color: kContentColorLightTheme),
+                      textAlign: TextAlign.center,
+                    ),
+                    Text(
+                      "$username - YourChatStarter",
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: kContentColorLightTheme),
+                      textAlign: TextAlign.center,
+                    ),
+                    Container(
+                      child: Image.asset(
+                        paymentQR,
+                        height: MediaQuery.of(context).size.width * 0.5,
+                        width: MediaQuery.of(context).size.width * 0.5,
+                      ),
+                    ),
                   ],
                 ),
               ),
               SizedBox(
                 height: 20,
               ),
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(5)),
-                    border: Border.all(color: kPrimaryColor),
-                    color: Colors.white),
-                child: Container(
-                  margin: EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Thanh toán",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: kContentColorLightTheme),
-                          ),
-                          Expanded(child: SizedBox()),
-                          Text(
-                            "1",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: kContentColorLightTheme),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            nameService,
-                            style: TextStyle(
-                                fontSize: 16, color: kContentColorLightTheme),
-                          ),
-                          Expanded(child: SizedBox()),
-                          Text(
-                            amount.toString() + " đ",
-                            style: TextStyle(
-                                fontSize: 16, color: kContentColorLightTheme),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Divider(
-                        height: 1.5,
-                        color: Colors.black,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Tổng",
-                            style: TextStyle(
-                                fontSize: 16, color: kContentColorLightTheme),
-                          ),
-                          Expanded(child: SizedBox()),
-                          Text(
-                            amount.toString() + " đ",
-                            style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: kContentColorLightTheme),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Center(
-                child: GestureDetector(
-                  onTap: () {},
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: kPrimaryColor),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Center(
-                          child: Text(
-                        "Thanh toán",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      )),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         )),
       ),
-    );
-  }
-
-  Widget buildEnableFocusTextField(
-      String label, String hint, TextEditingController controller) {
-    return TextField(
-      controller: controller,
-      style: const TextStyle(color: kContentColorLightTheme),
-      decoration: InputDecoration(
-          enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey, width: 0.0),
-          ),
-          labelText: label,
-          labelStyle:
-              TextStyle(fontSize: 16, color: Colors.grey.withOpacity(0.3)),
-          floatingLabelStyle: TextStyle(fontSize: 16, color: kPrimaryColor),
-          hintText: hint,
-          hintStyle: TextStyle(
-            fontSize: 16,
-            color: Colors.grey.withOpacity(0.3),
-          )),
-    );
-  }
-
-  Widget buildNumberTextField(
-      String label, String hint, TextEditingController controller) {
-    return TextField(
-      keyboardType: TextInputType.number,
-      controller: controller,
-      style: const TextStyle(color: kContentColorLightTheme),
-      decoration: InputDecoration(
-          enabledBorder: const UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey, width: 0.0),
-          ),
-          labelText: label,
-          labelStyle:
-              TextStyle(fontSize: 16, color: Colors.grey.withOpacity(0.3)),
-          floatingLabelStyle: TextStyle(fontSize: 16, color: kPrimaryColor),
-          hintText: hint,
-          hintStyle: TextStyle(
-            fontSize: 16,
-            color: Colors.grey.withOpacity(0.3),
-          )),
     );
   }
 }

@@ -4,12 +4,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:your_chat_starter/main.dart';
 import 'package:your_chat_starter/models/register_respond.dart';
+import 'package:your_chat_starter/models/save_change_respond.dart';
 import 'package:your_chat_starter/models/subscribe_push_request.dart';
 import 'package:your_chat_starter/services/shared_service.dart';
 
 import '../config.dart';
 import '../models/blog.dart';
-import '../models/change_password.dart';
+import '../models/change_password_request.dart';
 import '../models/detail_blog_request.dart';
 import '../models/detail_blog_respond.dart';
 import '../models/edit_request.dart';
@@ -208,7 +209,7 @@ class APIService {
     return detailBlogRespondJson(response.body);
   }
 
-  static Future<DetailBlogRespondModel> changePassword(
+  static Future<SaveChangeRespondModel> changePassword(
       ChangePasswordRequestModel model) async {
     var url = Uri.parse(Config.apiURL + Config.changePasswordAPI);
     var loginDetails = await SharedService.loginDetails();
@@ -227,7 +228,6 @@ class APIService {
           },
           body: jsonEncode(model));
     }
-
-    return detailBlogRespondJson(response.body);
+    return saveChangeRespondJson(response.body);
   }
 }

@@ -12,7 +12,7 @@ class DetailBlogRespondModel {
 
   DetailBlogRespondModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    blog = (json['blog'] != null ? new Blog.fromJson(json['blog']) : null)!;
+    if (json['blog'] != null) blog = new Blog.fromJson(json['blog']);
   }
 
   Map<String, dynamic> toJson() {

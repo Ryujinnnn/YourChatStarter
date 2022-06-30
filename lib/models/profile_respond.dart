@@ -49,8 +49,8 @@ class User {
     email = json['email'];
     paidValidUntil = json['paid_valid_until'];
     status = json['status'];
-    //displayName = json['display_name'];
-    //birthday = json['birthday'];
+    if (json['display_name'] != null) displayName = json['display_name'];
+    if (json['birthday'] != null) birthday = json['birthday'];
   }
 
   Map<String, dynamic> toJson() {

@@ -66,45 +66,43 @@ class _DetailBlogWidgetState extends State<DetailBlogWidget> {
                     SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        model.blog.tag[0] != null
-                            ? Container(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, top: 8, bottom: 8, right: 15),
-                                  child: Text(
-                                    model.blog.tag[0].name,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                decoration: BoxDecoration(
-                                    color: Color(StringToHex.toColor(
-                                        model.blog.tag[0].name)),
-                                    borderRadius: BorderRadius.circular(10)),
-                              )
-                            : Container(),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        model.blog.tag[1] != null
-                            ? Container(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 15, top: 8, bottom: 8, right: 15),
-                                  child: Text(
-                                    model.blog.tag[1].name,
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                decoration: BoxDecoration(
-                                    color: Color(StringToHex.toColor(
-                                        model.blog.tag[1].name)),
-                                    borderRadius: BorderRadius.circular(10)),
-                              )
-                            : Container(),
-                      ],
+                    Container(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: model.blog.tag.length,
+                              itemBuilder: (context, index) {
+                                return Center(
+                                    child: (model.blog.tag[index] != null)
+                                        ? Container(
+                                            margin: EdgeInsets.all(5),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 15,
+                                                  top: 8,
+                                                  bottom: 8,
+                                                  right: 15),
+                                              child: Text(
+                                                model.blog.tag[index].name,
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            decoration: BoxDecoration(
+                                                color: Color(
+                                                    StringToHex.toColor(model
+                                                        .blog.tag[index].name)),
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                          )
+                                        : Container());
+                              })
+                        ],
+                      ),
                     ),
                     SizedBox(
                       height: 10,

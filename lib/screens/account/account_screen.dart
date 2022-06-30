@@ -150,7 +150,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
                                         InfoScreen(),
-                                direction: AxisDirection.up));
+                                direction: AxisDirection.down));
                           },
                           child: Row(
                             children: [

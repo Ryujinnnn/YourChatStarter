@@ -59,7 +59,9 @@ Future<void> main() async {
 void loadThemeData() async {
   final prefs = await SharedPreferences.getInstance();
   String? localSaved = prefs.getString('themeValue');
-  savedTheme = ThemeGroup.values.firstWhere((e) => e.toString() == localSaved);
+  if (localSaved != null)
+    savedTheme =
+        ThemeGroup.values.firstWhere((e) => e.toString() == localSaved);
 }
 
 void theming() {

@@ -245,7 +245,10 @@ class _UpgradeActivityState extends State<UpgradeActivity> {
                               child: GestureDetector(
                                 onTap: () {
                                   _openPaymentScreen(
-                                      "standard", 10000, "Gói tiêu chuẩn");
+                                      "standard",
+                                      10000,
+                                      "Gói tiêu chuẩn",
+                                      "assets/images/10k.jpg");
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -349,8 +352,8 @@ class _UpgradeActivityState extends State<UpgradeActivity> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  _openPaymentScreen(
-                                      "premium", 20000, "Gói cao cấp");
+                                  _openPaymentScreen("premium", 20000,
+                                      "Gói cao cấp", "assets/images/20k.jpg");
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -439,8 +442,8 @@ class _UpgradeActivityState extends State<UpgradeActivity> {
                             Expanded(
                               child: GestureDetector(
                                 onTap: () {
-                                  _openPaymentScreen(
-                                      "lifetime", 200000, "Gói trọn đời");
+                                  _openPaymentScreen("lifetime", 200000,
+                                      "Gói trọn đời", "assets/images/200k.jpg");
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -480,14 +483,15 @@ class _UpgradeActivityState extends State<UpgradeActivity> {
     );
   }
 
-  _openPaymentScreen(String planName, int amount, String serviceName) {
+  _openPaymentScreen(
+      String planName, int amount, String serviceName, String paymentQR) {
     Navigator.of(context)
         .push(MaterialPageRoute<bool>(builder: (BuildContext context) {
       return PaymentScreen(
-        planName: planName,
-        amount: amount,
-        nameService: serviceName,
-      );
+          planName: planName,
+          amount: amount,
+          nameService: serviceName,
+          paymentQR: paymentQR);
     }));
   }
 }

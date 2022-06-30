@@ -63,45 +63,41 @@ class _BlogWidgetState extends State<BlogWidget> {
             SizedBox(
               height: 16,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                model.tag[0] != null
-                    ? Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, top: 8, bottom: 8, right: 15),
-                          child: Text(
-                            model.tag[0].name,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            color:
-                                Color(StringToHex.toColor(model.tag[0].name)),
-                            borderRadius: BorderRadius.circular(10)),
-                      )
-                    : Container(),
-                SizedBox(
-                  width: 15,
-                ),
-                model.tag[1] != null
-                    ? Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 15, top: 8, bottom: 8, right: 15),
-                          child: Text(
-                            model.tag[1].name,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            color:
-                                Color(StringToHex.toColor(model.tag[1].name)),
-                            borderRadius: BorderRadius.circular(10)),
-                      )
-                    : Container(),
-              ],
+            Container(
+              height: 50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ListView.builder(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemCount: model.tag.length,
+                      itemBuilder: (context, index) {
+                        return Center(
+                            child: (model.tag[index] != null)
+                                ? Container(
+                                    margin: EdgeInsets.all(5),
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 15,
+                                          top: 8,
+                                          bottom: 8,
+                                          right: 15),
+                                      child: Text(
+                                        model.tag[index].name,
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: Color(StringToHex.toColor(
+                                            model.tag[index].name)),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                  )
+                                : Container());
+                      }),
+                ],
+              ),
             ),
             Container(
                 margin:
