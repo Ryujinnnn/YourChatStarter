@@ -132,7 +132,7 @@ class ChatBotScreenState extends State<ChatBotScreen> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: SystemUiOverlay.values);
-    WidgetsBinding.instance?.addPostFrameCallback((_) => {
+    WidgetsBinding.instance.addPostFrameCallback((_) => {
           Timer(Duration(milliseconds: 200), () {
             _scrollController.animateTo(
                 _scrollController.position.maxScrollExtent,

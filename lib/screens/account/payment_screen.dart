@@ -219,6 +219,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           color: kContentColorLightTheme),
                       textAlign: TextAlign.center,
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Container(
                       child: Image.asset(
                         paymentQR,
