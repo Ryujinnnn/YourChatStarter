@@ -4,13 +4,21 @@ import 'package:flutter/material.dart';
 
 class ImageDialog extends StatelessWidget {
   final String imageURL;
-  const ImageDialog(this.imageURL, {Key? key}) : super(key: key);
+  late String base64String = "";
+  ImageDialog(this.imageURL, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    String base64String = imageURL.replaceAll("data:image/png;base64,", "");
+    if (imageURL.startsWith("data:image/png;base64")) {
+      base64String = imageURL.replaceAll("data:image/png;base64,", "");
+    }
     return Dialog(
-      child: Container(child: imageFromBase64String(base64String)),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: base64String != ""
+            ? imageFromBase64String(base64String)
+            : Image.network(imageURL),
+      ),
     );
   }
 

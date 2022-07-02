@@ -15,7 +15,7 @@ import 'package:your_chat_starter/services/shared_service.dart';
 import 'package:your_chat_starter/theme.dart';
 
 bool isLogin = false;
-late String externalUserId;
+String externalUserId = "";
 ThemeGroup? savedTheme;
 
 late Color kPrimaryColor;
@@ -27,6 +27,12 @@ Future<void> main() async {
       overlays: SystemUiOverlay.values);
 
   WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isIOS) {
+    // iOS-specific code
+    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+      print("Accepted permission: $accepted");
+    });
+  }
   bool isLoggedIn = await SharedService.isLoggedIn();
   if (isLoggedIn) {
     isLoggedIn = true;
@@ -38,22 +44,16 @@ Future<void> main() async {
   }
   loadThemeData();
   theming();
+  runApp(const MyApp());
+}
+
+void initOneSignal() async {
   OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
   OneSignal.shared.setAppId("c4f18d2d-08d5-450d-9865-3fe344cfb813");
-
   final status = await OneSignal.shared.getDeviceState();
   if (status != null) {
     externalUserId = status.userId!;
   }
-
-  if (Platform.isIOS) {
-    // iOS-specific code
-    OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
-      print("Accepted permission: $accepted");
-    });
-  }
-
-  runApp(const MyApp());
 }
 
 void loadThemeData() async {
@@ -98,6 +98,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     loadThemeData();
     theming();
+    initOneSignal();
     return MaterialApp(
       title: 'YourChatStarter',
       debugShowCheckedModeBanner: false,
